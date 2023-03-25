@@ -1,6 +1,6 @@
 ---
 title: "Hands-On Machine Learning with R"
-author: "Steven, Marcel Bißantz"
+author: "Steven Marcel Bißantz"
 date: "2023-03-25"
 output: github_document
 ---
@@ -9,12 +9,39 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Chapter 2 Modeling Process
 
+```{r}
+# Helper packages
+pkgs <- c("rsample", # Resampling procedures
+          "caret",   # Resampling and model training 
+          "h20"      # Resampling and model training
+          ) 
+# lapply(pkgs, library, character.only=TRUE) 
 
+# h2o 
+h2o::h2o.no_progress()  # turn off h2o progress bars
+h2o::h2o.init()         # launch h2o
+```
 
+```{r}
+?AmesHousing::ames_raw
 
+# Ames housing data
+ames <- AmesHousing::make_ames()
 
+# Coerce to a h2o frame
+ames_h2o <- h2o::as.h2o(ames)
 
+# Job attrition data
+# Note: the data are now in the modeldata package
+churn <- modeldata::attrition
 
+# Important: h2o can only deal with unordered factors
+
+# Coerce ordered factors
+unorder_if <- function(x) ifelse(is.ordered(x), factor(x, ordered = FALSE), x)
+# Trick: Use '[]' to keep the data frame structure
+churn[] <- lapply(churn, unorder_if)
+```
 

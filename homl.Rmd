@@ -1,5 +1,5 @@
 ---
-title: "Hands-On Machine Learning with R"
+title: "Notes: 'Hands-On Machine Learning with R'"
 author: "Steven Marcel Bißantz"
 date: "2023-03-25"
 output: github_document
@@ -15,13 +15,13 @@ knitr::opts_chunk$set(echo = TRUE)
 # Helper packages
 pkgs <- c("rsample", # Resampling procedures
           "caret",   # Resampling and model training 
-          "h20"      # Resampling and model training
-          ) 
+          "h20")     # Resampling and model training
+           
 # lapply(pkgs, library, character.only=TRUE) 
 
 # h2o 
-h2o::h2o.no_progress()  # turn off h2o progress bars
-h2o::h2o.init()         # launch h2o
+h2o::h2o.no_progress() # Avoid the progress bars in the output
+h2o::h2o.init()
 ```
 
 ```{r}
@@ -36,12 +36,53 @@ ames_h2o <- h2o::as.h2o(ames)
 # Job attrition data
 # Note: the data are now in the modeldata package
 churn <- modeldata::attrition
+```
 
-# Important: h2o can only deal with unordered factors
+Important: h2o cannot handle ordered factors so we need to coerce them to 
+unordered factors before the analysis.
 
+```{r}
 # Coerce ordered factors
 unorder_if <- function(x) ifelse(is.ordered(x), factor(x, ordered = FALSE), x)
 # Trick: Use '[]' to keep the data frame structure
 churn[] <- lapply(churn, unorder_if)
+```
+
+### Data splitting
+
+Simple random sampling and stratified sampling
+
+#### Simple random sampling
+
+Use `base` and no additional packages
+
+```{r}
+# Reproduceable results
+set.seed(123)
+# Number of rows
+n_rows <- nrow(ames)
+# Row index
+row_index <- seq(n_rows)
+# Index for the training cases
+train_index <- sample(row_index, size = round(n_rows) * 0.7, replace = FALSE)
+# Training set
+train <- ames[train_index,] ; cat("Training set: ", dim(train), "\n")
+# Testing set
+test <- ames[-train_index,] ; cat("Testing set: ", dim(test), "\n")
+# Plausibility check
+cat("Split: ", dim(train)[1] / n_rows * 100, "/", dim(test)[1] / n_rows * 100)
+```
+
+Use the `caret` package
+
+```{r}
+set.seed(123)
+```
+
+
+Use the `rsample` package
+
+```{r}
+set.seed(123)
 ```
 

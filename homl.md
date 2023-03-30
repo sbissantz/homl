@@ -16,8 +16,8 @@ information, such as data or prior knowledge, to approximate or extract
 functional relationships between variables.
 
 **Learning**: …means adaption; i.e. the learner uses the data (or
-evidence) to (self) optimize the algorithmic steps (e.g. the parameters
-of a model) to make accurate prediction.
+evidence) to (self) optimize the algorithmic steps (e.g., the
+parameters,$\theta$, of a model) to make accurate prediction.
 
 *Example*: In supervised learning we adapt to a known (“labeled”)
 target. In unsupervised machine learning we need to adapt to an unknown
@@ -27,19 +27,18 @@ target. In unsupervised machine learning we need to adapt to an unknown
 encapsulated in a loss (or utility) function, that specifies the
 difference to a target.
 
-*Example*: We could minimize the (info) distance between our model
-distribution q and the true frequency distribution of events p – KL
-divergence
+*Example*: The Kullback-Leibler Divergence minimizes the (info) distance
+between our model distribution $\mathbf{q}$ and the true frequency
+distribution of events $\mathbf{p}$
 
 **Optimization**: With the loss function we optimize (often: minimize,
 rarely: maximize) a (often: loss, rarely: utility) function using an
-optimization algorithm (e.g. SGD – stochastic gradient descent). The
-algorithm tells us at each iteration the difference to the optimum
-(often: the minimum, e.g. 0)
+optimization algorithm, like stochastic gradient descent (SGD)
+algorithm. The algorithm tells us at each iteration the difference to a
+prespecified optimum (often: the minimum, e.g. 0).
 
 ![](./homl_files/sgd.gif)<!-- --> Figure: An intuitive visualization of
-the stochastic gradient descent method. The picture is taken from the
-following website:
+the stochastic gradient descent method. The picture is taken from:
 <https://commons.wikimedia.org/wiki/File:Gradient_descent.gif>
 
 *Side note*: If AIML someday manages to learn causal relationships among
@@ -48,11 +47,10 @@ development.
 
 *Important*: “Causal predictions” vs. “mere predictions”
 
-##### Machine learning paradigms
+#### Machine learning paradigms
 
-We can classify ML models according to the amount of supervision needed
-during training. However, then we need to somehow add reinforcement
-learning:
+We could classify ML models according to the amount of supervision
+needed during training. However, do not forget reinforcement learning:
 
 1.  Supervised learning (~predictive models)
 2.  Unsupervised learning (–descriptive models)
@@ -67,20 +65,24 @@ or value to each data point (e.g., based on experts opinion, or a
 specific criterion)
 
 *Example*: Experts diagnosed (i.e. “labeled”) 500 patients with Major
-Depression Disorder (MDD): y. Now we can train an algorithm based on
-these data, together with patient characteristics, $X: f(X) = y$. Then
-we can use $f$, the learner, to make predictions for new, unseen
-patients.
+Depression Disorder (MDD): $y$. Now we can train an algorithm based on
+these data, $\mathcal{D}_{train}:\{X,y\}_{i=1}^{n_{train}}$, together
+with patient characteristics, $X: f(X) = y$. Then we can use $f$, the
+learner, to make predictions for new, unseen patients, for example, $i$
+in $\mathcal{D}_{test}:\{X,y\}_{i=1}^{n_{test}}$.
 
-##### Data quality & Validity
+#### Data quality & Validity
 
-Do always critically reflect on the quality of this labels. Ask whether
-the criteria make sense and whether the experts’ ratings are high
-quality.
+I have seen few authors discussing this point: *Do always critically
+reflect on the quality of your labels*. In unsupervised machine learning
+we do this, because we want to check the quality of the machine
+predictions. In supervised machine learning the labels are preassigned.
+Still, we must check the validity of the scores assigned by experts or
+criteria. Do they make sense or are they high quality?
 
-The quality of the approximation ($y = f(X)$) is on of importance if $y$
-is valid. If $y$ is garbage then we get a “good approximation of
-garbage”.
+The quality of the approximation ($y = f(X)$) is only of importance if
+$y$ is valid. If $y$ is trash then we get “a good approximation of
+trash”. *Garbage in garbage out* = it is that simple.
 
 ### Supervised learning (~predictive models)
 
@@ -96,9 +98,11 @@ assigned based on a criterion or expert knowledge)
 
 **Why is supervised learning “supervised”?**
 
-Because the training data you feed the algorithm includes the target
-values. Consequently, the solutions can be used to help supervise the
-training process to find the optimal algorithm parameters.
+Because the *training* data
+($\mathcal{D}_{train}:\{X,y\}_{i=1}^{n_{train}}$) you feed the algorithm
+includes the target values ($y$). Consequently, the solutions can be
+used to help supervise the training process to find the optimal
+algorithm parameters.
 
 **Underlying function assumption**: Given a dataset comprised of inputs
 and outputs $D:\{X,y\}_{i=1}^n$, we assume that there is an unknown
@@ -107,54 +111,56 @@ the target domain and resulted in the dataset. We then use supervised
 learning algorithms to approximate this function.
 
 *Open Question*: Does it need to be a function, or are also relations
-possible. e.g. y = x^2?
+possible? e.g. $y = x^2$?. I think relations are not possible, since
+there is no unique element in the codomain or range for each element in
+the domain.
 
-—
-
-The two problems in supervised learning:
+#### The two problems in supervised learning
 
 1.  Regression problem
 2.  Classification problem
 
-—
+#### Regression problem
 
-Regression problem
+**Regression problem**: …means the objective of our supervised learning
+is to predict a numeric outcome that falls on a continuum
+$(-\infty, \infty)$.
 
-…means the objective of our supervised learning is to predict a numeric
-outcome that falls on a continuum (-infinity, infinity)
+$$ y_{\in \mathbb{R}} = f(X_{\in \mathbb{R}}) $$
 
-f: R -\> R: (-infinity, infinity) ; f(X) = y ￼
+*Example*: Predict height based on persons characteristics, like sex.
 
-Example: Predict height based on persons characteristics, e.g. sex.
+#### Classification problem
 
-—
+**Clasification problem**: …means the objective of our supervised
+learning is to predict a categorical outcome (i.e., a binary or
+multinomial response measure)
 
-Classification problem
+*Example*: Classify customer reviews from 0 to 5 (multinomial) or
+“like”, “don’t like” (binary).
 
-…means the objective of our supervised learning is to predict a
-categorical outcome (i.e., a binary or multinomial response measure)
+*Important*: In ML often ordinal responses are modeled as categorical
+processes and thus with a multinomial distribution.
 
-￼
-
-Example: Classify customer reviews from 0 to 5 (multinomial) or “like”,
-“don’t like” (binary).
-
-Import: In ML often an ordinal response is modeled as a categorical
-process and thus with a multinomial distribution.
-
-Classification problems are kind of regression problems: Every
+**Classification problems are kind of regression problems**: Every
 classification is a (logistic) regression problem. In a general
-regression problem f: R -\> R, in a classification problem, f: R -\>
-\[0,1\] which is a subset of R^+.
+regression problem can be formalized as
+$y_{\in \mathbb{R}} = f(X_{\in \mathbb{R}})$. In a classification
+problem the situation is as follows:
+$y_{\in [0,1]} = f(X_{\in \mathbb{R}})$. *Note that $[0,1]$ is a subset
+of $\mathbb{R}^+$*. The problem is thus:
+$y_{\in [0,1]\subset \mathbb{R}^+} = f(X_{\in \mathbb{R}})$. What about
+the categories? In this binary case, the labels for the categories are
+assigned ex post according to 0/1 assignment rule.
 
-0/1 Assignment rule: In a classification problem we often want to
-predict the probability of a class (p(X=1)); by default, the class with
-the highest predicted probability becomes the predicted class: if p\* \>
-0.5 it get the label “1”, else p\* \< 0.5, and “0”
+**0/1 Assignment rule**: If we predict the probability of a class
+($P(X=1)$); by default, the class with the highest predicted probability
+becomes the predicted class: if $p \geq 0.5$ it get the label “1”, else
+$p* < 0.5$, and “0”.
 
-—
+### Unsupervised learning
 
-2.  Unsupervised learning (~descriptive models)
+(~descriptive models)
 
 Unsupervised learning: Develop an algorithm that uses unlabeled
 information to discover functional relationships between variables
@@ -186,8 +192,6 @@ observations (i.e., rows) into similar (more homogeneous) groups
 
 Example: “Market segmentation” – where we divide consumers into
 different homogeneous groups
-
-—
 
 Dimension reduction
 
@@ -579,14 +583,14 @@ h2o::h2o.init()
     ##  Connection successful!
     ## 
     ## R is connected to the H2O cluster: 
-    ##     H2O cluster uptime:         2 days 22 hours 
+    ##     H2O cluster uptime:         5 days 4 minutes 
     ##     H2O cluster timezone:       Europe/Berlin 
     ##     H2O data parsing timezone:  UTC 
     ##     H2O cluster version:        3.40.0.1 
-    ##     H2O cluster version age:    1 month and 19 days 
+    ##     H2O cluster version age:    1 month and 21 days 
     ##     H2O cluster name:           H2O_started_from_R_steven_qdt481 
     ##     H2O cluster total nodes:    1 
-    ##     H2O cluster total memory:   3.99 GB 
+    ##     H2O cluster total memory:   3.97 GB 
     ##     H2O cluster total cores:    8 
     ##     H2O cluster allowed cores:  8 
     ##     H2O cluster healthy:        TRUE 

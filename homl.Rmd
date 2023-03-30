@@ -3,6 +3,7 @@ title: "Notes: 'Hands-On Machine Learning with R'"
 author: "Steven Marcel Bißantz"
 date: "2023-03-25"
 output: html_document 
+knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_file = file.path(dirname(inputFile), 'index.html')) })
 ---
 
 ```{r setup, include=FALSE}

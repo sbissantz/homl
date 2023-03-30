@@ -2,7 +2,7 @@
 title: "Notes: 'Hands-On Machine Learning with R'"
 author: "Steven Marcel Bißantz"
 date: "2023-03-25"
-output: github_document
+output: pdf_document 
 ---
 
 ```{r setup, include=FALSE}
@@ -22,7 +22,7 @@ information, such as data or prior knowledge, to approximate or extract
 functional relationships between variables.
 
 **Learning**: …means adaption; i.e. the learner uses the data (or evidence) to
-(self) optimize the algorithmic steps (e.g., the  parameters,$\theta$, of a
+(self) optimize the algorithmic steps (e.g., the  parameters, $\theta$, of a
 model) to make accurate prediction.
 
 *Example*: In supervised learning we adapt to a known (“labeled”) target. In
@@ -172,306 +172,306 @@ Underlying function assumption: Given a dataset: D:Z_i, we assume that there is 
 
 In essence, unsupervised learning is concerned with identifying groups in a data set. The groups may be defined by the rows (i.e., clustering) or the columns (i.e., dimension reduction); however, the motive in each case is quite different.
 
-—
+<!-- — -->
 
-The two topics in unsupervised learning:
+<!-- The two topics in unsupervised learning: -->
 
-1. Clustering (~ rows in the data set)
-2. Dimension reduction (~ columns in the data set)
+<!-- 1. Clustering (~ rows in the data set) -->
+<!-- 2. Dimension reduction (~ columns in the data set) -->
 
-—
+<!-- — -->
 
-Clustering
+<!-- Clustering -->
 
-…means to use the observed variables (i.e., columns) to segment observations
-(i.e., rows) into similar (more homogeneous) groups
+<!-- …means to use the observed variables (i.e., columns) to segment observations -->
+<!-- (i.e., rows) into similar (more homogeneous) groups -->
 
-Example: “Market segmentation” – where we divide consumers into different
-homogeneous groups
+<!-- Example: “Market segmentation” – where we divide consumers into different -->
+<!-- homogeneous groups -->
 
 
-Dimension reduction
+<!-- Dimension reduction -->
 
-…means to reduce the number of variables (i.e. columns) in a data set. 
+<!-- …means to reduce the number of variables (i.e. columns) in a data set.  -->
 
-Example: Factor analysis – identify the underlying dimensions (factors) that
-explain patterns of correlations among multiple variables (items)
+<!-- Example: Factor analysis – identify the underlying dimensions (factors) that -->
+<!-- explain patterns of correlations among multiple variables (items) -->
 
-R* =  \Lambda \Phi \Lamda + \Psi
+<!-- $$R^* =  \Lambda \Phi \Lambda + \Psi$$ -->
 
-Full – orthogonal – compression versus meaningful compression: 
+<!-- Full – orthogonal – compression versus meaningful compression:  -->
 
-Full compression: If we have a regression model which tend to break with highly correlated variables, or have a data set where the predictors are so rich that we can’t process them with our machines, we can use PCA to compress the data set fully, i.e. reduce it with minimal loss in recovery to the smallest amount of uncorrelated variables – components.
+<!-- Full compression: If we have a regression model which tend to break with highly correlated variables, or have a data set where the predictors are so rich that we can’t process them with our machines, we can use PCA to compress the data set fully, i.e. reduce it with minimal loss in recovery to the smallest amount of uncorrelated variables – components. -->
 
-Meaningful compression:  If we want to understand or model the structural relationships between variables with more flexibility (i.e. Phi) we can try to find factors that first and foremost make sense.
+<!-- Meaningful compression:  If we want to understand or model the structural relationships between variables with more flexibility (i.e. Phi) we can try to find factors that first and foremost make sense. -->
 
-—
+<!-- — -->
 
-Downstream supervised learning: 
+<!-- Downstream supervised learning:  -->
 
-The outputs of unsupervised learning models can be used as inputs to downstream supervised learning models.
+<!-- The outputs of unsupervised learning models can be used as inputs to downstream supervised learning models. -->
 
-Example: Using a reduced feature set of a PCA and input it to downstream supervised learning models (e.g., principal component regression).
+<!-- Example: Using a reduced feature set of a PCA and input it to downstream supervised learning models (e.g., principal component regression). -->
 
-—
+<!-- — -->
 
-Problems: Quality assessment in supervised and unsupervised learning
+<!-- Problems: Quality assessment in supervised and unsupervised learning -->
 
-With unsupervised learning it is harder to assess the quality of the results, because we don’t know the true answer — the problem is unsupervised!
- 
-With predictive models and supervised learning algorithms (i.e., linear regression), it is possible to check our work by seeing how well our model predicts the response Y on observations not used in fitting the model. 
+<!-- With unsupervised learning it is harder to assess the quality of the results, because we don’t know the true answer — the problem is unsupervised! -->
 
-BUT, this does not safeguard against the quality check for the labels. If those are trash, then good predictions are meaningless.
+<!-- With predictive models and supervised learning algorithms (i.e., linear regression), it is possible to check our work by seeing how well our model predicts the response Y on observations not used in fitting the model.  -->
 
-—
+<!-- BUT, this does not safeguard against the quality check for the labels. If those are trash, then good predictions are meaningless. -->
 
-III. Reinforcement learning
+<!-- — -->
 
-Reinforcement learning is a training method based on rewarding desired behaviors
-and/or punishing undesired ones. In general, a reinforcement learning agent is
-able to perceive and interpret its environment, take actions and learn through
-trial and error.
+<!-- III. Reinforcement learning -->
 
-—
+<!-- Reinforcement learning is a training method based on rewarding desired behaviors -->
+<!-- and/or punishing undesired ones. In general, a reinforcement learning agent is -->
+<!-- able to perceive and interpret its environment, take actions and learn through -->
+<!-- trial and error. -->
 
-Digression
+<!-- — -->
 
-Machine learning algorithms provide a (smoothed) point-wise linear approximation of an underlying (non-linear) function.
+<!-- Digression -->
 
-Random Forest: unsmoothed, Gaussian Processes, (Bayesian) Splines.
+<!-- Machine learning algorithms provide a (smoothed) point-wise linear approximation of an underlying (non-linear) function. -->
 
-When use ML vs MLM:
+<!-- Random Forest: unsmoothed, Gaussian Processes, (Bayesian) Splines. -->
 
-MLM: Theory, or idea, expert knowledge, and often small data sets to (point wise-linearly) approximate f, i.e. the mapping from X -> y, then we could model the data using MLMs.
+<!-- When use ML vs MLM: -->
 
-ML: No theory or idea, no expert knowledge but have medium to large data set to (point wise-linearly) approximate f, i.e. the mapping from X -> y, then we could use machine learning techniques.
+<!-- MLM: Theory, or idea, expert knowledge, and often small data sets to (point wise-linearly) approximate f, i.e. the mapping from X -> y, then we could model the data using MLMs. -->
 
-Combine: Use a DNN to approximate the link function in a MLMM! 
+<!-- ML: No theory or idea, no expert knowledge but have medium to large data set to (point wise-linearly) approximate f, i.e. the mapping from X -> y, then we could use machine learning techniques. -->
 
-MLM & Taylor expansion
+<!-- Combine: Use a DNN to approximate the link function in a MLMM!  -->
 
-Machine Learners are: Linear or non-linear function approximations
+<!-- MLM & Taylor expansion -->
 
-Deep Neural Nets are: “(Non-linear, better: piecewise linear) Function approximation algorithms”
-~ Fourier series, Taylor expansion?
+<!-- Machine Learners are: Linear or non-linear function approximations -->
 
-As many pointed out, a regression/decision tree is a non-linear model. Note however that it is a piecewise linear model: in each neighborhood (defined in a non-linear way), it is linear. In fact, the model is just a local constant.
+<!-- Deep Neural Nets are: “(Non-linear, better: piecewise linear) Function approximation algorithms” -->
+<!-- ~ Fourier series, Taylor expansion? -->
 
-Note: RF are tree based, while DNNs are gradient based.
+<!-- As many pointed out, a regression/decision tree is a non-linear model. Note however that it is a piecewise linear model: in each neighborhood (defined in a non-linear way), it is linear. In fact, the model is just a local constant. -->
 
-https://machinelearningmastery.com/neural-networks-are-function-approximators/
+<!-- Note: RF are tree based, while DNNs are gradient based. -->
 
-Training a neural network on data approximates the unknown underlying mapping function from inputs to outputs.
+<!-- https://machinelearningmastery.com/neural-networks-are-function-approximators/ -->
 
-Is this why we can use a DNN to learn a link function?
+<!-- Training a neural network on data approximates the unknown underlying mapping function from inputs to outputs. -->
 
-Note: Deep Learning Is Not ‘Worse’ than Trees on Tabular Data https://towardsdatascience.com/deep-learning-is-not-worse-than-trees-on-tabular-data-1de25ed31d2
+<!-- Is this why we can use a DNN to learn a link function? -->
 
-—
+<!-- Note: Deep Learning Is Not ‘Worse’ than Trees on Tabular Data https://towardsdatascience.com/deep-learning-is-not-worse-than-trees-on-tabular-data-1de25ed31d2 -->
 
-Deep Neural Nets ~ Gaussian Processes
+<!-- — -->
 
-Lee, Bahri, et al. 2018: If the number or nodes in a carefully scaled NN (with a single hidden layer) converges to infinity, a DNN converges to a GP. The argument can be extended to deeper layers by induction. 
+<!-- Deep Neural Nets ~ Gaussian Processes -->
 
-GPs > DNNs: Always consider a GP even if your sample size grows infinitely large there are tricks to get it going, if not, use a DNN
+<!-- Lee, Bahri, et al. 2018: If the number or nodes in a carefully scaled NN (with a single hidden layer) converges to infinity, a DNN converges to a GP. The argument can be extended to deeper layers by induction.  -->
 
-DNN > GPs: Since the computational cost naively scales as O(N^3), where N are the data points, consider a DNN if a GP is not possible with your data
+<!-- GPs > DNNs: Always consider a GP even if your sample size grows infinitely large there are tricks to get it going, if not, use a DNN -->
 
-GPs kind of resolve the parametric assumptions that DNNs make
+<!-- DNN > GPs: Since the computational cost naively scales as O(N^3), where N are the data points, consider a DNN if a GP is not possible with your data -->
 
-Important: I think this holds only for supervised learning and feed forward neural nets.
+<!-- GPs kind of resolve the parametric assumptions that DNNs make -->
 
-—
+<!-- Important: I think this holds only for supervised learning and feed forward neural nets. -->
 
-(Non-)parametric
+<!-- — -->
 
-Nonparametric regression: is a category of regression analysis* in which the predictor does not take a predetermined form but is constructed according to information derived from the data. More specifically, the data supply the model structure as well as the model estimates.
+<!-- (Non-)parametric -->
 
-Q: is the number of parameters increasing as you process new training examples during training? If so, the method is non-parametric. 
+<!-- Nonparametric regression: is a category of regression analysis* in which the predictor does not take a predetermined form but is constructed according to information derived from the data. More specifically, the data supply the model structure as well as the model estimates. -->
 
-Example: Gaussian process regression
+<!-- Q: is the number of parameters increasing as you process new training examples during training? If so, the method is non-parametric.  -->
 
-*Regression analysis is a model family where the Data are divided in D:{X,y} and we estimate the relationship “f” between X and y: y=f(X)
+<!-- Example: Gaussian process regression -->
 
-Are standard deep neural networks (DNN) parametric?
+<!-- *Regression analysis is a model family where the Data are divided in D:{X,y} and we estimate the relationship “f” between X and y: y=f(X) -->
 
-Technically speaking, yes, since they have a fixed number of parameters. 
-(We have to determine the model structure, I.e. layers, neurons, etc. beforehand)
+<!-- Are standard deep neural networks (DNN) parametric? -->
 
-Deep learning models are generally parametric - in fact they have a huge number of parameters, one for each weight that is tuned during training.
-As the number of weights generally stays constant, they technically have fixed degrees of freedom. However, as there are generally so many parameters they may be seen to emulate non-parametric.
+<!-- Technically speaking, yes, since they have a fixed number of parameters.  -->
+<!-- (We have to determine the model structure, I.e. layers, neurons, etc. beforehand) -->
 
-Are Gaussian processes non-parametric?
-Technically speaking, yes, since
+<!-- Deep learning models are generally parametric - in fact they have a huge number of parameters, one for each weight that is tuned during training. -->
+<!-- As the number of weights generally stays constant, they technically have fixed degrees of freedom. However, as there are generally so many parameters they may be seen to emulate non-parametric. -->
 
-GPs are non-parametric since it the number of parameter increase he number of parameters increasing as you process new training examples – O(N^3)
+<!-- Are Gaussian processes non-parametric? -->
+<!-- Technically speaking, yes, since -->
 
-Gaussian processes (for example) use each observation as a new weight and as the number of points goes to infinity so too do the number of weights (not to be confused with hyper parameters).
-I say generally because there are so many different flavours of each model. For example low rank GPs have a bounded number of parameters which are inferred by the data and I'm sure someone has been making some type of non-parametric dnn at some research group!
+<!-- GPs are non-parametric since it the number of parameter increase he number of parameters increasing as you process new training examples – O(N^3) -->
 
-—
+<!-- Gaussian processes (for example) use each observation as a new weight and as the number of points goes to infinity so too do the number of weights (not to be confused with hyper parameters). -->
+<!-- I say generally because there are so many different flavours of each model. For example low rank GPs have a bounded number of parameters which are inferred by the data and I'm sure someone has been making some type of non-parametric dnn at some research group! -->
 
-Non-linear and non-parametric
+<!-- — -->
 
-(My idea – In a nutshell): in regression, non-linear refers to the shape of the outcome y - variable, parametric to the way the X are combined. 
+<!-- Non-linear and non-parametric -->
 
-—
+<!-- (My idea – In a nutshell): in regression, non-linear refers to the shape of the outcome y - variable, parametric to the way the X are combined.  -->
 
-Modeling Process
+<!-- — -->
 
-No free lunch theorem  (Wolpert 1996): 
-The theorem states that there is no single  model that can outperform all other algorithms on all possible tasks or problems.
+<!-- Modeling Process -->
 
-Implication 1: Participate in an iterative, playful and explorative model building process. Never rely on a single "best" algorithm for all problems. 
+<!-- No free lunch theorem  (Wolpert 1996):  -->
+<!-- The theorem states that there is no single  model that can outperform all other algorithms on all possible tasks or problems. -->
 
-Implication 2: Approaching ML modeling correctly means approaching it strategically by 
-* …spending our data wisely on learning and validation procedures,
-* …properly pre-processing the feature and target variables, 
-* …minimizing data leakage, 
-* …tuning hyperparameters, and
-* …assessing model performance.
+<!-- Implication 1: Participate in an iterative, playful and explorative model building process. Never rely on a single "best" algorithm for all problems.  -->
 
-Generalizability: The ability of an algorithm to accurately predict future outcomes, rather than just fitting well to past data, e.g. the sample.
+<!-- Implication 2: Approaching ML modeling correctly means approaching it strategically by  -->
+<!-- * …spending our data wisely on learning and validation procedures, -->
+<!-- * …properly pre-processing the feature and target variables,  -->
+<!-- * …minimizing data leakage,  -->
+<!-- * …tuning hyperparameters, and -->
+<!-- * …assessing model performance. -->
 
-Data Splitting
+<!-- Generalizability: The ability of an algorithm to accurately predict future outcomes, rather than just fitting well to past data, e.g. the sample. -->
 
-To provide an accurate understanding of the generalizability of our final optimal model, we can split our data into training and test data sets:
+<!-- Data Splitting -->
 
-* Training set: used to develop feature sets, train the algorithm, tune hyperparameters, and compare models.
-* Test set: Given a final model used to estimate an unbiased assessment of the model’s performance on unseen data, i.e. its generalization error.
+<!-- To provide an accurate understanding of the generalizability of our final optimal model, we can split our data into training and test data sets: -->
 
-Generalization error: The difference between a model's performance on the training data and its performance on new, unseen data, like the validation set.
+<!-- * Training set: used to develop feature sets, train the algorithm, tune hyperparameters, and compare models. -->
+<!-- * Test set: Given a final model used to estimate an unbiased assessment of the model’s performance on unseen data, i.e. its generalization error. -->
 
-Rough guidelines for the split 
+<!-- Generalization error: The difference between a model's performance on the training data and its performance on new, unseen data, like the validation set. -->
 
-N: small-medium
+<!-- Rough guidelines for the split  -->
 
-* Spending too much in training (e.g., >80%) won’t allow us to get a good assessment of predictive performance. We may find a model that fits the training data very well, but is not generalizable (overfitting).
-* Sometimes too much spent in testing (>40%) won’t allow us to get a good assessment of model parameters.
+<!-- N: small-medium -->
 
-e.g. 60% (training)–40% (testing), 70%–30%, or 80%–20%
+<!-- * Spending too much in training (e.g., >80%) won’t allow us to get a good assessment of predictive performance. We may find a model that fits the training data very well, but is not generalizable (overfitting). -->
+<!-- * Sometimes too much spent in testing (>40%) won’t allow us to get a good assessment of model parameters. -->
 
-N: big (> 100K)
+<!-- e.g. 60% (training)–40% (testing), 70%–30%, or 80%–20% -->
 
-Small gains with additional data as compared to smaller sample sizes. 
+<!-- N: big (> 100K) -->
 
-* p ≤ n:  Use a smaller training sample to increase computation speed (e.g., models built on larger training sets often take longer to score new data sets in production)
-* p ≥ n: Keep the samples sizes large, because the information is needed to identify consistent signals in the features.
+<!-- Small gains with additional data as compared to smaller sample sizes.  -->
 
-—
+<!-- * p ≤ n:  Use a smaller training sample to increase computation speed (e.g., models built on larger training sets often take longer to score new data sets in production) -->
+<!-- * p ≥ n: Keep the samples sizes large, because the information is needed to identify consistent signals in the features. -->
 
-Common splitting schemes: 
+<!-- — -->
 
-1. Simple random sampling 
-2. Stratified sampling
+<!-- Common splitting schemes:  -->
 
-—
+<!-- 1. Simple random sampling  -->
+<!-- 2. Stratified sampling -->
 
-Simple random sampling splitting
+<!-- — -->
 
-Take a simple random sample from the data – with the desired probability
+<!-- Simple random sampling splitting -->
 
-Problem: Does not control for any data attributes, such as the distribution of your response variable (Y).
+<!-- Take a simple random sample from the data – with the desired probability -->
 
-—
+<!-- Problem: Does not control for any data attributes, such as the distribution of your response variable (Y). -->
 
-Stratified sampling splitting
+<!-- — -->
 
-Take a stratified sample from the data – with the desired probability
+<!-- Stratified sampling splitting -->
 
-Allows to explicitly control the sampling so that our training and test sets have similar Y distributions
+<!-- Take a stratified sample from the data – with the desired probability -->
 
-Procedure: Segment Y into classes (discrete y) or quantiles (continuous y) and randomly sample from each. 
+<!-- Allows to explicitly control the sampling so that our training and test sets have similar Y distributions -->
 
-Classification problems: When y is severely imbalanced (e.g., 90% “Yes” and 10% “No”). See also: Class Imbalances
+<!-- Procedure: Segment Y into classes (discrete y) or quantiles (continuous y) and randomly sample from each.  -->
 
-Regression problems: With small sample size and where y deviates strongly from normality (i.e., positively skewed like Sale_Price). 
+<!-- Classification problems: When y is severely imbalanced (e.g., 90% “Yes” and 10% “No”). See also: Class Imbalances -->
 
-—
+<!-- Regression problems: With small sample size and where y deviates strongly from normality (i.e., positively skewed like Sale_Price).  -->
 
-Class imbalances
+<!-- — -->
 
-Imbalanced data can have a significant impact on model predictions and performance (Kuhn and Johnson 2013).
+<!-- Class imbalances -->
 
-Categorization: 
+<!-- Imbalanced data can have a significant impact on model predictions and performance (Kuhn and Johnson 2013). -->
 
-1. Up-sampling
-2. Down-sampling
-3. Over-Under-Sampling
+<!-- Categorization:  -->
 
-—
+<!-- 1. Up-sampling -->
+<!-- 2. Down-sampling -->
+<!-- 3. Over-Under-Sampling -->
 
-Down sampling: Balance the dataset by reducing the size of the abundant class(es) to match the frequencies in the least prevalent class.
+<!-- — -->
 
-By keeping all samples in the rare class and randomly selecting an equal number of samples in the abundant class, a balanced new dataset can be retrieved for further modeling. Furthermore, the reduced sample size reduces the computation burden imposed by further steps in the ML process.
+<!-- Down sampling: Balance the dataset by reducing the size of the abundant class(es) to match the frequencies in the least prevalent class. -->
 
-Important: Use If there are enough data
+<!-- By keeping all samples in the rare class and randomly selecting an equal number of samples in the abundant class, a balanced new dataset can be retrieved for further modeling. Furthermore, the reduced sample size reduces the computation burden imposed by further steps in the ML process. -->
 
-—
+<!-- Important: Use If there are enough data -->
 
-Up-sampling:
+<!-- — -->
 
-On the contrary, up-sampling is used when the quantity of data is insufficient. It tries to balance the dataset by increasing the size of rarer samples. Rather than getting rid of abundant samples, new rare samples are generated by using repetition or bootstrapping (described further in Section 2.4.2).
+<!-- Up-sampling: -->
 
-A combination of over- and under-sampling is often successful and a common approach is known as Synthetic Minority Over-Sampling Technique, or SMOTE (Chawla et al. 2002).
+<!-- On the contrary, up-sampling is used when the quantity of data is insufficient. It tries to balance the dataset by increasing the size of rarer samples. Rather than getting rid of abundant samples, new rare samples are generated by using repetition or bootstrapping (described further in Section 2.4.2). -->
 
-Resampling methods
+<!-- A combination of over- and under-sampling is often successful and a common approach is known as Synthetic Minority Over-Sampling Technique, or SMOTE (Chawla et al. 2002). -->
 
-1. K-fold cross validation
-2. Bootstrapping 
+<!-- Resampling methods -->
 
-For other measures see the Anki card.
+<!-- 1. K-fold cross validation -->
+<!-- 2. Bootstrapping  -->
 
-K-fold cross validation
+<!-- For other measures see the Anki card. -->
 
-…A resampling method that randomly divides the training data into k groups (aka folds) of approximately equal size. 
+<!-- K-fold cross validation -->
 
-The model is fit on k−1 folds and then the remaining fold is used to compute model performance. 
+<!-- …A resampling method that randomly divides the training data into k groups (aka folds) of approximately equal size.  -->
 
-This procedure is repeated k times; each time, a different fold is treated as the validation set. 
-This process results in k estimates of the generalization error (say ϵ1,ϵ2,…,ϵk). 
+<!-- The model is fit on k−1 folds and then the remaining fold is used to compute model performance.  -->
 
-Thus, the k-fold CV estimate is computed by averaging the k test errors, providing us with an approximation of the error we might expect on unseen data.
+<!-- This procedure is repeated k times; each time, a different fold is treated as the validation set.  -->
+<!-- This process results in k estimates of the generalization error (say ϵ1,ϵ2,…,ϵk).  -->
 
-Note: This is kind of the sampling distribution for the model performance(?)
+<!-- Thus, the k-fold CV estimate is computed by averaging the k test errors, providing us with an approximation of the error we might expect on unseen data. -->
 
-n practice, one typically uses k=5 or k=10. There is no formal rule as to the
-size of k; however, as k gets larger, the difference between the estimated
-performance and the true performance to be seen on the test set will decrease.
-On the other hand, using too large k can introduce computational burdens.
-Moreover, Molinaro, Simon, and Pfeiffer (2005) found that k=10 performed
-similarly to leave-one-out cross validation (LOOCV) which is the most extreme
-approach (i.e., setting k=n).
+<!-- Note: This is kind of the sampling distribution for the model performance(?) -->
 
-Although using k≥10 helps to minimize the variability in the estimated
-performance, k-fold CV still tends to have higher variability than bootstrapping
-(discussed next). Kim (2009) showed that repeating k-fold CV can help to
-increase the precision of the estimated generalization error. Consequently, for
-smaller data sets (say n<10,000), 10-fold CV repeated 5 or 10 times will improve
-the accuracy of your estimated performance and also provide an estimate of its
-variability
+<!-- n practice, one typically uses k=5 or k=10. There is no formal rule as to the -->
+<!-- size of k; however, as k gets larger, the difference between the estimated -->
+<!-- performance and the true performance to be seen on the test set will decrease. -->
+<!-- On the other hand, using too large k can introduce computational burdens. -->
+<!-- Moreover, Molinaro, Simon, and Pfeiffer (2005) found that k=10 performed -->
+<!-- similarly to leave-one-out cross validation (LOOCV) which is the most extreme -->
+<!-- approach (i.e., setting k=n). -->
 
-CV as you can often perform CV directly within certain ML functions:
+<!-- Although using k≥10 helps to minimize the variability in the estimated -->
+<!-- performance, k-fold CV still tends to have higher variability than bootstrapping -->
+<!-- (discussed next). Kim (2009) showed that repeating k-fold CV can help to -->
+<!-- increase the precision of the estimated generalization error. Consequently, for -->
+<!-- smaller data sets (say n<10,000), 10-fold CV repeated 5 or 10 times will improve -->
+<!-- the accuracy of your estimated performance and also provide an estimate of its -->
+<!-- variability -->
 
-Or externally as in the below chunk5. When applying it externally to an ML
-algorithm as below, we’ll need a process to apply the ML model to each resample,
-which we’ll also cover.
+<!-- CV as you can often perform CV directly within certain ML functions: -->
 
-as.h2o(<my-data-frame>)
+<!-- Or externally as in the below chunk5. When applying it externally to an ML -->
+<!-- algorithm as below, we’ll need a process to apply the ML model to each resample, -->
+<!-- which we’ll also cover. -->
 
-ordered factors and H2O has no way of handling this data type. Consequently, you
-must convert any ordered factors to unordered; see ?base::ordered
+<!-- as.h2o(<my-data-frame>) -->
 
-see the sampling argument in ?caret::trainControl()
+<!-- ordered factors and H2O has no way of handling this data type. Consequently, you -->
+<!-- must convert any ordered factors to unordered; see ?base::ordered -->
 
-h2o algorithms have a weights_column and balance_classes
+<!-- see the sampling argument in ?caret::trainControl() -->
 
-Many of these drawbacks and inconsistencies were originally organized and
-presented by Kuhn (2018)
+<!-- h2o algorithms have a weights_column and balance_classes -->
 
-The caret package has been the preferred meta engine over the years; however,
-the author is now transitioning to full-time development on parsnip, which is
-designed to be a more robust and tidy meta engine.↩
+<!-- Many of these drawbacks and inconsistencies were originally organized and -->
+<!-- presented by Kuhn (2018) -->
+
+<!-- The caret package has been the preferred meta engine over the years; however, -->
+<!-- the author is now transitioning to full-time development on parsnip, which is -->
+<!-- designed to be a more robust and tidy meta engine.↩ -->
 
 ## Chapter 2: Modeling Process
 

@@ -17,7 +17,7 @@ functional relationships between variables.
 
 **Learning**: …means adaption; i.e. the learner uses the data (or
 evidence) to (self) optimize the algorithmic steps (e.g., the
-parameters,$\theta$, of a model) to make accurate prediction.
+parameters, $\theta$, of a model) to make accurate prediction.
 
 *Example*: In supervised learning we adapt to a known (“labeled”)
 target. In unsupervised machine learning we need to adapt to an unknown
@@ -583,7 +583,7 @@ h2o::h2o.init()
     ##  Connection successful!
     ## 
     ## R is connected to the H2O cluster: 
-    ##     H2O cluster uptime:         5 days 4 minutes 
+    ##     H2O cluster uptime:         5 days 7 minutes 
     ##     H2O cluster timezone:       Europe/Berlin 
     ##     H2O data parsing timezone:  UTC 
     ##     H2O cluster version:        3.40.0.1 

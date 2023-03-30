@@ -2,7 +2,7 @@
 title: "Notes: 'Hands-On Machine Learning with R'"
 author: "Steven Marcel Bißantz"
 date: "2023-03-25"
-output: pdf_document 
+output: html_document 
 ---
 
 ```{r setup, include=FALSE}

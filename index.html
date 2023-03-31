@@ -422,14 +422,15 @@ new, unseen patients, for example, <span class="math inline">\(i\)</span> in <sp
 <h4>Data quality &amp; Validity</h4>
 <p>I have seen few authors discussing this point: <em>Do always
 critically reflect on the quality of your labels</em>. In unsupervised
-machine learning we do this, because we want to check the quality of the
-machine predictions. In supervised machine learning the labels are
-preassigned. Still, we must check the validity of the scores assigned by
-experts or criteria. Do they make sense or are they high quality?</p>
+machine learning we often do this, because we want to check the quality
+of the machine predictions. In supervised machine learning the labels
+are preassigned. Still, we must check the validity of the scores
+assigned by experts or criteria. Do they make sense or are they high
+quality?</p>
 <p>The quality of the approximation (<span class="math inline">\(y =
 f(X)\)</span>) is only of importance if <span class="math inline">\(y\)</span> is valid. If <span class="math inline">\(y\)</span> is trash then we get “a good
-approximation of trash”. <em>Garbage in garbage out</em> = it is that
-simple.</p>
+approximation – but of trash”. <em>Garbage in garbage out</em> it is
+that simple.</p>
 </div>
 <div id="supervised-learning-predictive-models" class="section level3">
 <h3>Supervised learning (~predictive models)</h3>
@@ -439,7 +440,9 @@ future values (^Y) based on a set of features (X).</p>
 <p><strong>Supervised learning</strong>: Develop an algorithm or
 predictive model that uses labeled data <span class="math inline">\(D:\{X,y\}_{i=1}^n\)</span> to produces an accurate
 (e.g., non- or piecewise linear) approximation of the mapping function
-“<span class="math inline">\(f\)</span>”: <span class="math inline">\(y=f(X)\)</span> – and make accurate predictions.
+“<span class="math inline">\(f\)</span>”: <span class="math inline">\(y=f(X)\)</span> – and make accurate predictions
+for future values of <span class="math inline">\(\tilde{y}\)</span>
+based on a set of features (<span class="math inline">\(X\)</span>).
 (<em>Note</em>: The labels are often assigned based on a criterion or
 expert knowledge)</p>
 <p><strong>Why is supervised learning “supervised”?</strong></p>
@@ -495,9 +498,10 @@ assignment rule.</p>
 <p><strong>0/1 Assignment rule</strong>: If we predict the probability
 of a class (<span class="math inline">\(P(X=1)\)</span>); by default,
 the class with the highest predicted probability becomes the predicted
-class: if <span class="math inline">\(p \geq 0.5\)</span> it get the
-label “1”, else <span class="math inline">\(p* &lt; 0.5\)</span>, and
-“0”.</p>
+class:</p>
+<p><span class="math display">\[ k = \begin{cases} 0 &amp;
+\Leftrightarrow p &lt; 0.5 \\ 1 &amp; \Leftrightarrow p \geq
+0.5 \end{cases} \]</span></p>
 </div>
 </div>
 <div id="unsupervised-learning" class="section level3">
@@ -703,11 +707,11 @@ h2o::h2o.init()</code></pre>
 <pre><code>##  Connection successful!
 ## 
 ## R is connected to the H2O cluster: 
-##     H2O cluster uptime:         5 days 32 minutes 
+##     H2O cluster uptime:         5 days 22 hours 
 ##     H2O cluster timezone:       Europe/Berlin 
 ##     H2O data parsing timezone:  UTC 
 ##     H2O cluster version:        3.40.0.1 
-##     H2O cluster version age:    1 month and 21 days 
+##     H2O cluster version age:    1 month and 22 days 
 ##     H2O cluster name:           H2O_started_from_R_steven_qdt481 
 ##     H2O cluster total nodes:    1 
 ##     H2O cluster total memory:   3.97 GB 

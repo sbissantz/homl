@@ -85,15 +85,15 @@ $\mathcal{D}_{test}:\{X,y\}_{i=1}^{n_{test}}$.
 #### Data quality & Validity 
 
 I have seen few authors discussing this point: *Do always critically reflect on
-the quality of your labels*. In unsupervised machine learning we do this,
+the quality of your labels*. In unsupervised machine learning we often do this,
 because we want to check the quality of the machine predictions. In supervised
 machine learning the labels are preassigned. Still, we must check the validity
 of the scores assigned by experts or criteria. Do they make sense or are they
 high quality?
 
 The quality of the approximation ($y = f(X)$) is only of importance if $y$ is
-valid. If $y$ is trash then we get “a good approximation of trash”. *Garbage in
-garbage out* =  it is that simple.
+valid. If $y$ is trash then we get “a good approximation – but of trash”.
+*Garbage in garbage out* it is that simple.
 
 ### Supervised learning (~predictive models)
 
@@ -104,8 +104,9 @@ of features (X).
 **Supervised learning**: Develop an algorithm or predictive model that uses
 labeled data $D:\{X,y\}_{i=1}^n$ to produces an accurate (e.g., non- or
 piecewise linear) approximation of the mapping function “$f$”:  $y=f(X)$ – and
-make accurate predictions. (*Note*: The labels are often assigned based on a
-criterion or expert knowledge)
+make accurate predictions for future values of $\tilde{y}$ based on a set of
+features ($X$). (*Note*: The labels are often assigned based on a criterion or
+expert knowledge)
 
 **Why is supervised learning “supervised”?**
 
@@ -161,8 +162,10 @@ assigned ex post according to 0/1 assignment rule.
 
 **0/1 Assignment rule**: If we predict the probability of a class ($P(X=1)$);
 by default, the class with the highest predicted probability becomes the
-predicted class: if $p \geq 0.5$ it get the label "1", else $p* < 0.5$, and
-"0".
+predicted class:
+
+$$ k = \begin{cases} 0 & \Leftrightarrow p < 0.5 \\ 1 & \Leftrightarrow p \geq
+0.5 \end{cases} $$
 
 ### Unsupervised learning
 (~descriptive models)

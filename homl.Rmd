@@ -2,8 +2,7 @@
 title: "Notes: 'Hands-On Machine Learning with R'"
 author: "Steven Marcel Bißantz"
 date: "2023-03-25"
-output: html_document 
-knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_file = file.path(dirname(inputFile), 'index.html')) })
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -97,13 +96,9 @@ valid. If $y$ is trash then we get “a good approximation – but of trash”.
 
 ### Supervised learning (~predictive models)
 
-**TODO**: Add: A major goal of the machine learning process is to find an
-algorithm f(X) that most accurately predicts future values (^Y) based on a set
-of features (X).
-
 **Supervised learning**: Develop an algorithm or predictive model that uses
 labeled data $D:\{X,y\}_{i=1}^n$ to produces an accurate (e.g., non- or
-piecewise linear) approximation of the mapping function “$f$”:  $y=f(X)$ – and
+piecewise linear) approximation of the mapping function “$f$”:  $y=f(X)$ -- and
 make accurate predictions for future values of $\tilde{y}$ based on a set of
 features ($X$). (*Note*: The labels are often assigned based on a criterion or
 expert knowledge)
@@ -167,16 +162,19 @@ predicted class:
 $$ k = \begin{cases} 0 & \Leftrightarrow p < 0.5 \\ 1 & \Leftrightarrow p \geq
 0.5 \end{cases} $$
 
-### Unsupervised learning
-(~descriptive models)
+### Unsupervised learning (~descriptive models)
 
-Unsupervised learning: Develop an algorithm that uses unlabeled information to  discover functional relationships between variables (rows, columns). 
+**Unsupervised learning**: Develop an algorithm that uses unlabeled information to
+discover functional relationships between variables (rows, columns). 
 
-Underlying function assumption: Given a dataset: D:Z_i, we assume that there is an unknown functional relationship between the variables (rows, columns). We then use unsupervised learning algorithms to discover this function.
+*Underlying function assumption*: Given a dataset: D:Z_i, we assume that there is
+an unknown functional relationship between the variables (rows, columns). We
+then use unsupervised learning algorithms to discover this function.
 
-In essence, unsupervised learning is concerned with identifying groups in a data set. The groups may be defined by the rows (i.e., clustering) or the columns (i.e., dimension reduction); however, the motive in each case is quite different.
-
-<!-- — -->
+In essence, unsupervised learning is concerned with identifying groups in a
+data set. The groups may be defined by the rows (i.e., clustering) or the
+columns (i.e., dimension reduction); however, the motive in each case is quite
+different.
 
 <!-- The two topics in unsupervised learning: -->
 

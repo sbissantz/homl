@@ -434,9 +434,6 @@ that simple.</p>
 </div>
 <div id="supervised-learning-predictive-models" class="section level3">
 <h3>Supervised learning (~predictive models)</h3>
-<p><strong>TODO</strong>: Add: A major goal of the machine learning
-process is to find an algorithm f(X) that most accurately predicts
-future values (^Y) based on a set of features (X).</p>
 <p><strong>Supervised learning</strong>: Develop an algorithm or
 predictive model that uses labeled data <span class="math inline">\(D:\{X,y\}_{i=1}^n\)</span> to produces an accurate
 (e.g., non- or piecewise linear) approximation of the mapping function
@@ -504,21 +501,19 @@ class:</p>
 0.5 \end{cases} \]</span></p>
 </div>
 </div>
-<div id="unsupervised-learning" class="section level3">
-<h3>Unsupervised learning</h3>
-<p>(~descriptive models)</p>
-<p>Unsupervised learning: Develop an algorithm that uses unlabeled
-information to discover functional relationships between variables
-(rows, columns).</p>
-<p>Underlying function assumption: Given a dataset: D:Z_i, we assume
-that there is an unknown functional relationship between the variables
-(rows, columns). We then use unsupervised learning algorithms to
-discover this function.</p>
+<div id="unsupervised-learning-descriptive-models" class="section level3">
+<h3>Unsupervised learning (~descriptive models)</h3>
+<p><strong>Unsupervised learning</strong>: Develop an algorithm that
+uses unlabeled information to discover functional relationships between
+variables (rows, columns).</p>
+<p><em>Underlying function assumption</em>: Given a dataset: D:Z_i, we
+assume that there is an unknown functional relationship between the
+variables (rows, columns). We then use unsupervised learning algorithms
+to discover this function.</p>
 <p>In essence, unsupervised learning is concerned with identifying
 groups in a data set. The groups may be defined by the rows (i.e.,
 clustering) or the columns (i.e., dimension reduction); however, the
 motive in each case is quite different.</p>
-<!-- — -->
 <!-- The two topics in unsupervised learning: -->
 <!-- 1. Clustering (~ rows in the data set) -->
 <!-- 2. Dimension reduction (~ columns in the data set) -->
@@ -707,14 +702,14 @@ h2o::h2o.init()</code></pre>
 <pre><code>##  Connection successful!
 ## 
 ## R is connected to the H2O cluster: 
-##     H2O cluster uptime:         5 days 22 hours 
+##     H2O cluster uptime:         6 days 23 hours 
 ##     H2O cluster timezone:       Europe/Berlin 
 ##     H2O data parsing timezone:  UTC 
 ##     H2O cluster version:        3.40.0.1 
-##     H2O cluster version age:    1 month and 22 days 
+##     H2O cluster version age:    1 month and 23 days 
 ##     H2O cluster name:           H2O_started_from_R_steven_qdt481 
 ##     H2O cluster total nodes:    1 
-##     H2O cluster total memory:   3.97 GB 
+##     H2O cluster total memory:   3.96 GB 
 ##     H2O cluster total cores:    8 
 ##     H2O cluster allowed cores:  8 
 ##     H2O cluster healthy:        TRUE 

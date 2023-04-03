@@ -187,12 +187,14 @@ $$ k = \begin{cases} 0 & \Leftrightarrow p < 0.5 \\ 1 & \Leftrightarrow p \geq
 
 ### Unsupervised learning (~descriptive models)
 
-**Unsupervised learning**: Develop an algorithm that uses unlabeled information to
-discover functional relationships between variables (rows, columns). 
+**Unsupervised learning**: ...develop algorithms that uses unlabeled
+information to discover functional relationships between variables (rows,
+columns). 
 
-**Underlying function assumption**: Given a dataset: D:Z_i, we assume that there is
-an unknown functional relationship between the variables (rows, columns). We
-then use unsupervised learning algorithms to discover this function.
+**Underlying function assumption**: Given a dataset: $D:\{Z_i\}$, we assume
+that there is an unknown functional relationship between the variables (rows,
+columns). We then use unsupervised learning algorithms to discover this
+function.
 
 In essence, unsupervised learning is concerned with identifying groups in a
 data set. The groups may be defined by the rows (i.e., clustering) or the
@@ -207,10 +209,10 @@ different.
 #### Clustering
 
 **Clustering**: …means to use the observed variables (i.e., columns) to segment
-observations (i.e., rows) into similar (more homogeneous) groups
+observations (i.e., rows) into similar (more homogeneous) groups.
 
 *Example*: “Market segmentation” -- where we divide consumers into different
-homogeneous groups
+homogeneous groups.
 
 #### Dimension reduction
 
@@ -218,63 +220,55 @@ homogeneous groups
 columns) in a data set.
 
 *Example*: Factor analysis -- identify the underlying dimensions (factors) that
-explain patterns of correlations among multiple variables (items)
+explain patterns of correlations among multiple variables (items).
 
 $$R^* =  \Lambda \Phi \Lambda + \Psi$$
 
-Full – orthogonal – compression versus meaningful compression:
+##### Full compression vs. meaningful compression
+Full -- orthogonal -- compression versus meaningful compression:
 
-Full compression: If we have a regression model which tend to break with highly
+**Full compression**: If we have a regression model which tend to break with highly
 correlated variables, or have a data set where the predictors are so rich that
 we can’t process them with our machines, we can use PCA to compress the data
 set fully, i.e. reduce it with minimal loss in recovery to the smallest amount
 of uncorrelated variables – components.
 
-Meaningful compression:  If we want to understand or model the structural
+**Meaningful compression**:  If we want to understand or model the structural
 relationships between variables with more flexibility (i.e. Phi) we can try to
 find factors that first and foremost make sense.
 
-—
+#### Downstream supervised learning
 
-Downstream supervised learning:
+**Downstream supervised learning**: The outputs of unsupervised learning models
+can be used as inputs to downstream supervised learning models.
 
-The outputs of unsupervised learning models can be used as inputs to downstream
-supervised learning models.
-
-Example: Using a reduced feature set of a PCA and input it to downstream
+*Example*: Using a reduced feature set of a PCA and input it to downstream
 supervised learning models (e.g., principal component regression).
 
-—
+##### Problems: Quality assessment in supervised and unsupervised learning
 
-Problems: Quality assessment in supervised and unsupervised learning
-
-With unsupervised learning it is harder to assess the quality of the results,
-because we don’t know the true answer — the problem is unsupervised!
+With unsupervised learning it seems harder to assess the quality of the results,
+because we don't know the true answer — the problem is unsupervised!
 
 With predictive models and supervised learning algorithms (i.e., linear
 regression), it is possible to check our work by seeing how well our model
 predicts the response Y on observations not used in fitting the model.
 
-BUT, this does not safeguard against the quality check for the labels. If those
-are trash, then good predictions are meaningless.
+However, this does not safeguard against the quality check for the labels. If
+those are trash, then good predictions are meaningless.
 
-III. Reinforcement learning
+### Reinforcement learning
 
-Reinforcement learning is a training method based on rewarding desired
+**Reinforcement learning**: ...is a training method based on rewarding desired
 behaviors and/or punishing undesired ones. In general, a reinforcement learning
 agent is able to perceive and interpret its environment, take actions and learn
 through trial and error.
 
-—
+### Digression
 
-Digression
-
-Machine learning algorithms provide a (smoothed) point-wise linear
-approximation of an underlying (non-linear) function.
-
-Random Forest: unsmoothed, Gaussian Processes, (Bayesian) Splines.
-
-When use ML vs MLM:
+I really try to see ML algorithms as function approximation machines. Often,
+they provide (smoothed) point-wise linear (e.g., DNNs) or non-linear (e.g.,
+GPs) approximations of underlying (non-linear) functions.
 
 MLM: Theory, or idea, expert knowledge, and often small data sets to (point
 wise-linearly) approximate f, i.e. the mapping from X -> y, then we could model
@@ -284,9 +278,14 @@ ML: No theory or idea, no expert knowledge but have medium to large data set to
 (point wise-linearly) approximate f, i.e. the mapping from X -> y, then we
 could use machine learning techniques.
 
-Combine: Use a DNN to approximate the link function in a MLMM!
-
-MLM & Taylor expansion
+Combine GPs and Hierarchical modeling
+One way to implement this approach is to use a Bayesian hierarchical model,
+where the GP is used as the link function for the regression model at each
+level. The parameters of the GP are then estimated using a Bayesian approach,
+which allows for uncertainty quantification in the predictions. Overall, using
+GPs to approximate the link function in a multilevel model can provide a
+flexible and probabilistic approach to modeling non-linear relationships
+between variables.
 
 Machine Learners are: Linear or non-linear function approximations
 
@@ -380,7 +379,7 @@ outcome y - variable, parametric to the way the X are combined.
 
 —
 
-Modeling Process
+## Chapter 2: Modeling Process
 
 No free lunch theorem  (Wolpert 1996):
 The theorem states that there is no single  model that can outperform all other

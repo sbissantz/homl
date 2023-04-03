@@ -527,13 +527,14 @@ class:</p>
 </div>
 <div id="unsupervised-learning-descriptive-models" class="section level3">
 <h3>Unsupervised learning (~descriptive models)</h3>
-<p><strong>Unsupervised learning</strong>: Develop an algorithm that
-uses unlabeled information to discover functional relationships between
+<p><strong>Unsupervised learning</strong>: …develop algorithms that uses
+unlabeled information to discover functional relationships between
 variables (rows, columns).</p>
 <p><strong>Underlying function assumption</strong>: Given a dataset:
-D:Z_i, we assume that there is an unknown functional relationship
-between the variables (rows, columns). We then use unsupervised learning
-algorithms to discover this function.</p>
+<span class="math inline">\(D:\{Z_i\}\)</span>, we assume that there is
+an unknown functional relationship between the variables (rows,
+columns). We then use unsupervised learning algorithms to discover this
+function.</p>
 <p>In essence, unsupervised learning is concerned with identifying
 groups in a data set. The groups may be defined by the rows (i.e.,
 clustering) or the columns (i.e., dimension reduction); however, the
@@ -549,9 +550,9 @@ motive in each case is quite different.</p>
 <h4>Clustering</h4>
 <p><strong>Clustering</strong>: …means to use the observed variables
 (i.e., columns) to segment observations (i.e., rows) into similar (more
-homogeneous) groups</p>
+homogeneous) groups.</p>
 <p><em>Example</em>: “Market segmentation” – where we divide consumers
-into different homogeneous groups</p>
+into different homogeneous groups.</p>
 </div>
 <div id="dimension-reduction" class="section level4">
 <h4>Dimension reduction</h4>
@@ -559,48 +560,57 @@ into different homogeneous groups</p>
 variables (i.e. columns) in a data set.</p>
 <p><em>Example</em>: Factor analysis – identify the underlying
 dimensions (factors) that explain patterns of correlations among
-multiple variables (items)</p>
+multiple variables (items).</p>
 <p><span class="math display">\[R^* =  \Lambda \Phi \Lambda +
 \Psi\]</span></p>
-<p>Full – orthogonal – compression versus meaningful compression:</p>
-<p>Full compression: If we have a regression model which tend to break
-with highly correlated variables, or have a data set where the
-predictors are so rich that we can’t process them with our machines, we
-can use PCA to compress the data set fully, i.e. reduce it with minimal
-loss in recovery to the smallest amount of uncorrelated variables
-– components.</p>
-<p>Meaningful compression: If we want to understand or model the
-structural relationships between variables with more flexibility
-(i.e. Phi) we can try to find factors that first and foremost make
-sense.</p>
-<p>—</p>
-<p>Downstream supervised learning:</p>
-<p>The outputs of unsupervised learning models can be used as inputs to
-downstream supervised learning models.</p>
-<p>Example: Using a reduced feature set of a PCA and input it to
-downstream supervised learning models (e.g., principal component
+<div id="full-compression-vs.-meaningful-compression" class="section level5">
+<h5>Full compression vs. meaningful compression</h5>
+<p>Full – orthogonal – compression versus meaningful compression:</p>
+<p><strong>Full compression</strong>: If we have a regression model
+which tend to break with highly correlated variables, or have a data set
+where the predictors are so rich that we can’t process them with our
+machines, we can use PCA to compress the data set fully, i.e. reduce it
+with minimal loss in recovery to the smallest amount of uncorrelated
+variables – components.</p>
+<p><strong>Meaningful compression</strong>: If we want to understand or
+model the structural relationships between variables with more
+flexibility (i.e. Phi) we can try to find factors that first and
+foremost make sense.</p>
+</div>
+</div>
+<div id="downstream-supervised-learning" class="section level4">
+<h4>Downstream supervised learning</h4>
+<p><strong>Downstream supervised learning</strong>: The outputs of
+unsupervised learning models can be used as inputs to downstream
+supervised learning models.</p>
+<p><em>Example</em>: Using a reduced feature set of a PCA and input it
+to downstream supervised learning models (e.g., principal component
 regression).</p>
-<p>—</p>
-<p>Problems: Quality assessment in supervised and unsupervised
-learning</p>
-<p>With unsupervised learning it is harder to assess the quality of the
-results, because we don’t know the true answer — the problem is
+<div id="problems-quality-assessment-in-supervised-and-unsupervised-learning" class="section level5">
+<h5>Problems: Quality assessment in supervised and unsupervised
+learning</h5>
+<p>With unsupervised learning it seems harder to assess the quality of
+the results, because we don’t know the true answer — the problem is
 unsupervised!</p>
 <p>With predictive models and supervised learning algorithms (i.e.,
 linear regression), it is possible to check our work by seeing how well
 our model predicts the response Y on observations not used in fitting
 the model.</p>
-<p>BUT, this does not safeguard against the quality check for the
+<p>However, this does not safeguard against the quality check for the
 labels. If those are trash, then good predictions are meaningless.</p>
-<ol start="3" style="list-style-type: upper-roman">
-<li>Reinforcement learning</li>
-</ol>
-<p>Reinforcement learning is a training method based on rewarding
-desired behaviors and/or punishing undesired ones. In general, a
-reinforcement learning agent is able to perceive and interpret its
-environment, take actions and learn through trial and error.</p>
-<p>—</p>
-<p>Digression</p>
+</div>
+</div>
+</div>
+<div id="reinforcement-learning" class="section level3">
+<h3>Reinforcement learning</h3>
+<p><strong>Reinforcement learning</strong>: …is a training method based
+on rewarding desired behaviors and/or punishing undesired ones. In
+general, a reinforcement learning agent is able to perceive and
+interpret its environment, take actions and learn through trial and
+error.</p>
+</div>
+<div id="digression" class="section level3">
+<h3>Digression</h3>
 <p>Machine learning algorithms provide a (smoothed) point-wise linear
 approximation of an underlying (non-linear) function.</p>
 <p>Random Forest: unsmoothed, Gaussian Processes, (Bayesian)
@@ -840,7 +850,6 @@ parsnip, which is designed to be a more robust and tidy meta
 engine.↩︎</p>
 </div>
 </div>
-</div>
 <div id="chapter-2-modeling-process" class="section level2">
 <h2>Chapter 2: Modeling Process</h2>
 <pre class="r"><code># Helper packages
@@ -856,11 +865,11 @@ h2o::h2o.init()</code></pre>
 <pre><code>##  Connection successful!
 ## 
 ## R is connected to the H2O cluster: 
-##     H2O cluster uptime:         8 days 55 minutes 
+##     H2O cluster uptime:         8 days 23 hours 
 ##     H2O cluster timezone:       Europe/Berlin 
 ##     H2O data parsing timezone:  UTC 
 ##     H2O cluster version:        3.40.0.1 
-##     H2O cluster version age:    1 month and 24 days 
+##     H2O cluster version age:    1 month and 25 days 
 ##     H2O cluster name:           H2O_started_from_R_steven_qdt481 
 ##     H2O cluster total nodes:    1 
 ##     H2O cluster total memory:   3.96 GB 

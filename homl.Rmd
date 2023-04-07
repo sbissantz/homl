@@ -17,9 +17,9 @@ please read the original text.
 
 ## Chapter 1: Introduction 
 
-**The essence of machine learning**: Develop algorithms/models that use
-information, such as data or prior knowledge, to approximate or extract
-functional relationships between variables.
+**Machine learning**: Develop algorithms/models that use information, such as
+data or prior knowledge, to approximate or extract functional relationships
+between variables.
 
 **Learning**: …means adaption; i.e. the learner uses the data (or evidence) to
 (self) optimize the algorithmic steps (e.g., the  parameters, $\theta$, of a
@@ -191,15 +191,15 @@ $$ k = \begin{cases} 0 & \Leftrightarrow p < 0.5 \\ 1 & \Leftrightarrow p \geq
 information to discover functional relationships between variables (rows,
 columns). 
 
-**Underlying function assumption**: Given a dataset: $D:\{Z_i\}$, we assume
-that there is an unknown functional relationship between the variables (rows,
-columns). We then use unsupervised learning algorithms to discover this
-function.
-
 In essence, unsupervised learning is concerned with identifying groups in a
 data set. The groups may be defined by the rows (i.e., clustering) or the
 columns (i.e., dimension reduction); however, the motive in each case is quite
 different.
+
+**Underlying function assumption**: Given a dataset: $D:\{Z_i\}$, we assume
+that there is an unknown functional relationship between the variables (rows,
+columns). We then use unsupervised learning algorithms to discover this
+function.
 
 #### The two topics in unsupervised learning:
 
@@ -227,15 +227,15 @@ $$R^* =  \Lambda \Phi \Lambda + \Psi$$
 ##### Full compression vs. meaningful compression
 Full -- orthogonal -- compression versus meaningful compression:
 
-**Full compression**: If we have a regression model which tend to break with highly
-correlated variables, or have a data set where the predictors are so rich that
-we can’t process them with our machines, we can use PCA to compress the data
-set fully, i.e. reduce it with minimal loss in recovery to the smallest amount
-of uncorrelated variables – components.
+**Full compression**: If we have a regression model which tend to break with
+highly correlated variables, or have a data set where the predictors are so
+rich that we can't process them with our machines, we can use PCA to compress
+the data set fully, i.e. reduce it with minimal loss in recovery to the
+smallest amount of uncorrelated variables -- components.
 
 **Meaningful compression**:  If we want to understand or model the structural
-relationships between variables with more flexibility (i.e. Phi) we can try to
-find factors that first and foremost make sense.
+relationships between variables with more flexibility (i.e. $\Phi$) we can try
+to find factors that first and foremost make sense.
 
 #### Downstream supervised learning
 
@@ -264,33 +264,300 @@ behaviors and/or punishing undesired ones. In general, a reinforcement learning
 agent is able to perceive and interpret its environment, take actions and learn
 through trial and error.
 
-### Digression
+## Chapter 2: Modeling Process
+
+```{r}
+# Helper packages
+pkgs <- c("rsample", # Resampling procedures
+          "caret",   # Resampling and model training 
+          "h20")     # Resampling and model training
+           
+# lapply(pkgs, library, character.only=TRUE) 
+
+# h2o 
+h2o::h2o.no_progress() # Avoid the progress bars in the output
+h2o::h2o.init()
+
+?AmesHousing::ames_raw
+
+# Ames housing data
+ames <- AmesHousing::make_ames()
+
+# Coerce to a h2o frame
+ames_h2o <- h2o::as.h2o(ames)
+
+# Job attrition data
+# Note: the data are now in the modeldata package
+churn <- modeldata::attrition
+```
+
+Important: h2o cannot handle ordered factors so we need to coerce them to 
+unordered factors before the analysis.
+
+```{r}
+# Coerce ordered factors
+unorder_if <- function(x) ifelse(is.ordered(x), factor(x, ordered = FALSE), x)
+# Trick: Use '[]' to keep the data frame structure
+churn[] <- lapply(churn, unorder_if)
+```
+
+**No free lunch theorem** (Wolpert 1996): "There is no single  model that can
+outperform all other algorithms on all possible tasks or problems."
+
+*Implication 1*: Participate in an iterative, playful and explorative model
+building process. Never rely on a single "best" algorithm for all problems.
+(see also: Stacking)
+
+*Implication 2*: Approaching ML modeling correctly means approaching it
+strategically by
+* …spending our data wisely on learning and validation procedures,
+* …properly pre-processing the feature and target variables,
+* …minimizing data leakage,
+* …tuning hyperparameters, and
+* …assessing model performance
+
+**Generalizability**: The ability of an algorithm to accurately predict future
+outcomes, rather than just fitting well to past data, e.g. the sample.
+
+### Data Splitting
+
+To provide an accurate understanding of the generalizability of our final
+optimal model, we can split our data into *training* and *test data sets*:
+
+* **Training set**: The data we use to develop feature sets, train the
+  algorithm, tune hyperparameters, and compare models.
+* **Test set**: The data that we given a final model use to estimate an
+  unbiased assessment of the model's performance on unseen data, i.e. its
+  *generalization error*.
+
+**Generalization error**: The difference between a model's performance on the
+training data and its performance on new, unseen data, like the validation set.
+
+#### Rough guidelines for the split
+
+**N: small-medium**
+
+* Spending too much in training (e.g., >80%) won't allow us to get a good
+  assessment of predictive performance. We may find a model that fits the
+  training data very well, but is not generalizable (overfitting).
+* Sometimes too much spent in testing (>40%) won't allow us to get a good
+  assessment of model parameters.
+
+e.g. 60% (training)-40% (testing), 70%-30%, or 80%-20%
+
+**N: big (100K)**
+
+Small gains with additional data as compared to smaller sample sizes.
+
+* $p \leq n$:  Use a smaller training sample to increase computation speed (e.g.,
+  models built on larger training sets often take longer to score new data sets
+  in production)
+* $p \geq n$: Keep the samples sizes large, because the information is needed to
+  identify consistent signals in the features.
+
+#### Common splitting schemes:
+
+1. Simple random sampling
+2. Stratified sampling
+
+#### Simple random sampling splitting
+
+Take a simple random sample from the data -- with the desired probability
+
+*Problem*: Does not control for any data attributes, such as the distribution
+of your response variable ($y$).
+
+#### Simple random sampling
+
+Use `base` and no additional packages
+
+```{r}
+# Reproduceable results
+set.seed(123)
+# Number of rows
+n_rows <- nrow(ames)
+# Row index
+row_index <- seq(n_rows)
+# Index for the training cases
+train_index <- sample(row_index, size = round(n_rows) * 0.7, replace = FALSE)
+# Training set
+train <- ames[train_index,] ; cat("Training set: ", dim(train), "\n")
+# Testing set
+test <- ames[-train_index,] ; cat("Testing set: ", dim(test), "\n")
+# Plausibility check
+cat("Split: ", dim(train)[1] / n_rows * 100, "/", dim(test)[1] / n_rows * 100)
+```
+
+Use the `caret` package
+
+```{r}
+set.seed(123)
+```
+
+
+Use the `rsample` package
+
+```{r}
+set.seed(123)
+```
+
+#### Stratified sampling splitting
+
+Take a stratified sample from the data -- with the desired probability
+
+Allows to explicitly control the sampling so that our training and test sets
+have similar Y distributions
+
+Procedure: Segment Y into classes (discrete y) or quantiles (continuous y) and
+randomly sample from each.
+
+Classification problems: When y is severely imbalanced (e.g., 90% “Yes” and 10%
+“No”). See also: Class Imbalances
+
+Regression problems: With small sample size and where y deviates strongly from
+normality (i.e., positively skewed like Sale_Price).
+
+#### Class imbalances
+
+Imbalanced data can have a significant impact on model predictions and
+performance (Kuhn and Johnson 2013).
+
+#### Categorization:
+
+1. Up-sampling
+2. Down-sampling
+3. Over-Under-Sampling
+
+#### Down sampling
+
+**Down sampling**: Balance the dataset by reducing the size of the abundant
+class(es) to match the frequencies in the least prevalent class.
+
+*Important*: By keeping all samples in the rare class and randomly selecting
+an equal number of samples in the abundant class, a balanced new dataset can be
+retrieved for further modeling. Furthermore, the reduced sample size reduces
+the computation burden imposed by further steps in the ML process.
+
+**When should we use down-sampling**? Use If there are enough data.
+
+#### Up-sampling
+
+**Up-sampling**: A strateg where we try to balance the dataset by increasing
+the size of rarer samples. 
+
+*Important*: Rather than getting rid of abundant samples, new rare samples are
+generated by using repetition or bootstrapping.
+
+**When should we use up-sampling**? When the quantity of data is insufficient.
+
+#### Over-Under-Sampling
+
+**SMOTE**: A combination of over- and under-sampling is often successful. A
+common approach is known as Synthetic Minority Over-Sampling Technique (SMOTE,
+Chawla et al. 2002).
+
+### Resampling methods
+
+1. K-fold cross validation
+2. Bootstrapping
+
+*Note*: For other measures see the Anki card
+
+#### K-fold cross validation
+
+**K-fold cross validation**: A resampling method that randomly divides the
+training data into k groups (aka., folds) of approximately equal size. The
+model is fit on k-1 folds and then the remaining fold is used to compute
+model performance. This procedure is repeated k times; each time, a different
+fold is treated as the validation set. This process results in k estimates of
+the generalization error.
+
+Thus, the k-fold CV estimate is computed by averaging the k test errors,
+providing us with an approximation of the error we might expect on unseen data.
+
+Note: This is kind of the sampling distribution for the model performance
+
+n practice, one typically uses k=5 or k=10. There is no formal rule as to the
+size of k; however, as k gets larger, the difference between the estimated
+performance and the true performance to be seen on the test set will decrease.
+On the other hand, using too large k can introduce computational burdens.
+Moreover, Molinaro, Simon, and Pfeiffer (2005) found that k=10 performed
+similarly to leave-one-out cross validation (LOOCV) which is the most extreme
+approach (i.e., setting k=n).
+
+Although using k≥10 helps to minimize the variability in the estimated
+performance, k-fold CV still tends to have higher variability than bootstrapping
+(discussed next). Kim (2009) showed that repeating k-fold CV can help to
+increase the precision of the estimated generalization error. Consequently, for
+smaller data sets (say n<10,000), 10-fold CV repeated 5 or 10 times will improve
+the accuracy of your estimated performance and also provide an estimate of its
+variability
+
+CV as you can often perform CV directly within certain ML functions:
+
+Or externally as in the below chunk5. When applying it externally to an ML
+algorithm as below, we’ll need a process to apply the ML model to each resample,
+which we’ll also cover.
+
+as.h2o(<my-data-frame>)
+
+ordered factors and H2O has no way of handling this data type. Consequently, you
+must convert any ordered factors to unordered; see ?base::ordered
+
+see the sampling argument in ?caret::trainControl()
+
+h2o algorithms have a weights_column and balance_classes
+
+Many of these drawbacks and inconsistencies were originally organized and
+presented by Kuhn (2018)
+
+The caret package has been the preferred meta engine over the years; however,
+the author is now transitioning to full-time development on parsnip, which is
+designed to be a more robust and tidy meta engine.↩
+
+### TODO Digression: Are BDA and ML separate things?
 
 I really try to see ML algorithms as function approximation machines. Often,
 they provide (smoothed) point-wise linear (e.g., DNNs) or non-linear (e.g.,
 GPs) approximations of underlying (non-linear) functions.
 
-MLM: Theory, or idea, expert knowledge, and often small data sets to (point
-wise-linearly) approximate f, i.e. the mapping from X -> y, then we could model
-the data using MLMs.
+However, for me it was hard to see how machine learning algorithms can be used
+in probabilisitc modeling more generally and how they interplay with multilevel
+models, for instance. I thought machine leanring and, what I call, "Bayesian
+data" analysis are two different worlds. They are not. Both can be embedded in
+framework of probabilisitc modeling; and thus we can combine then to produce
+even more powerful models. 
 
-ML: No theory or idea, no expert knowledge but have medium to large data set to
-(point wise-linearly) approximate f, i.e. the mapping from X -> y, then we
-could use machine learning techniques.
+*Example*: Combine GPs and Hierarchical modeling. One way to implement this
+approach is to use a Bayesian hierarchical model, where the GP is used as the
+link function for the regression model at each level. The parameters of the GP
+are then estimated using a Bayesian approach, which allows for uncertainty
+quantification in the predictions. Overall, using GPs to approximate the link
+function in a multilevel model can provide a flexible and probabilistic
+approach to modeling non-linear relationships between variables.
 
-Combine GPs and Hierarchical modeling
-One way to implement this approach is to use a Bayesian hierarchical model,
-where the GP is used as the link function for the regression model at each
-level. The parameters of the GP are then estimated using a Bayesian approach,
-which allows for uncertainty quantification in the predictions. Overall, using
-GPs to approximate the link function in a multilevel model can provide a
-flexible and probabilistic approach to modeling non-linear relationships
-between variables.
+### Digression: Deep Neural Nets ~ Gaussian Processes
 
-Machine Learners are: Linear or non-linear function approximations
+Lee, Bahri, et al. (2018) showed that, if the number or nodes in a carefully
+scaled NN (with a single hidden layer) -- think of a MLP -- converges to
+infinity, a DNN converges to a GP. However, the argument can be extended to
+deeper layers by induction.
 
-Deep Neural Nets are: “(Non-linear, better: piecewise linear) Function
-approximation algorithms” 
+**GPs > DNN**: Consequently, *GPs only emulate non-linearity*. To put it
+another way, GPs kind of resolve the parametric assumptions that MLPs make.
+So I would prefer to use a GP over a MLP whenerver possible, even if your
+sample size grows infinitely large. There are tricks to get it going; if not,
+use a DNN.
+
+**DNN > GPs**: Since the computational cost of GPs naively scales as
+$\mathcal{O}(N^3)$, where $N$ are the data points, consider a MLP if a GP is
+not possible with your data.
+
+*Open Question*: I think this holds only for feed forward neural nets such as
+MLPs. Recurrent Neural Networks (RNNs) and Convolutional Neural Networks
+(CNNs), for instance, can be used to model time series data and image data,
+respectively, and are not limited to pointwise linear function approximation.
+
 
 ~ Fourier series, Taylor expansion?
 
@@ -307,29 +574,10 @@ function from inputs to outputs.
 
 Is this why we can use a DNN to learn a link function?
 
-Note: Deep Learning Is Not ‘Worse’ than Trees on Tabular Data
+Note: Deep Learning Is Not 'Worse' than Trees on Tabular Data
 https://towardsdatascience.com/deep-learning-is-not-worse-than-trees-on-tabular-data-1de25ed31d2
 
-—
-
-Deep Neural Nets ~ Gaussian Processes
-
-Lee, Bahri, et al. 2018: If the number or nodes in a carefully scaled NN (with
-a single hidden layer) converges to infinity, a DNN converges to a GP. The
-argument can be extended to deeper layers by induction.
-
-GPs > DNNs: Always consider a GP even if your sample size grows infinitely
-large there are tricks to get it going, if not, use a DNN
-
-DNN > GPs: Since the computational cost naively scales as O(N^3), where N are
-the data points, consider a DNN if a GP is not possible with your data
-
-GPs kind of resolve the parametric assumptions that DNNs make
-
-Important: I think this holds only for supervised learning and feed forward
-neural nets.
-
-—
+--
 
 (Non-)parametric
 
@@ -378,270 +626,3 @@ Non-linear and non-parametric
 outcome y - variable, parametric to the way the X are combined.
 
 —
-
-## Chapter 2: Modeling Process
-
-No free lunch theorem  (Wolpert 1996):
-The theorem states that there is no single  model that can outperform all other
-algorithms on all possible tasks or problems.
-
-Implication 1: Participate in an iterative, playful and explorative model
-building process. Never rely on a single "best" algorithm for all problems.
-
-Implication 2: Approaching ML modeling correctly means approaching it
-strategically by
-* …spending our data wisely on learning and validation procedures,
-* …properly pre-processing the feature and target variables,
-* …minimizing data leakage,
-* …tuning hyperparameters, and
-* …assessing model performance.
-
-Generalizability: The ability of an algorithm to accurately predict future
-outcomes, rather than just fitting well to past data, e.g. the sample.
-
-Data Splitting
-
-To provide an accurate understanding of the generalizability of our final
-optimal model, we can split our data into training and test data sets:
-
-* Training set: used to develop feature sets, train the algorithm, tune
-  hyperparameters, and compare models.
-* Test set: Given a final model used to estimate an unbiased assessment of the
-  model’s performance on unseen data, i.e. its generalization error.
-
-Generalization error: The difference between a model's performance on the
-training data and its performance on new, unseen data, like the validation set.
-
-Rough guidelines for the split
-
-N: small-medium
-
-* Spending too much in training (e.g., >80%) won’t allow us to get a good
-  assessment of predictive performance. We may find a model that fits the
-  training data very well, but is not generalizable (overfitting).
-* Sometimes too much spent in testing (>40%) won’t allow us to get a good
-  assessment of model parameters.
-
-e.g. 60% (training)–40% (testing), 70%–30%, or 80%–20%
-
-N: big (> 100K)
-
-Small gains with additional data as compared to smaller sample sizes.
-
-* p ≤ n:  Use a smaller training sample to increase computation speed (e.g.,
-  models built on larger training sets often take longer to score new data sets
-  in production)
-* p ≥ n: Keep the samples sizes large, because the information is needed to
-  identify consistent signals in the features.
-
-—
-
-Common splitting schemes:
-
-1. Simple random sampling
-2. Stratified sampling
-
-—
-
-Simple random sampling splitting
-
-Take a simple random sample from the data – with the desired probability
-
-Problem: Does not control for any data attributes, such as the distribution of
-your response variable (Y).
-
-—
-
-Stratified sampling splitting
-
-Take a stratified sample from the data – with the desired probability
-
-Allows to explicitly control the sampling so that our training and test sets
-have similar Y distributions
-
-Procedure: Segment Y into classes (discrete y) or quantiles (continuous y) and
-randomly sample from each.
-
-Classification problems: When y is severely imbalanced (e.g., 90% “Yes” and 10%
-“No”). See also: Class Imbalances
-
-Regression problems: With small sample size and where y deviates strongly from
-normality (i.e., positively skewed like Sale_Price).
-
-—
-
-Class imbalances
-
-Imbalanced data can have a significant impact on model predictions and
-performance (Kuhn and Johnson 2013).
-
-Categorization:
-
-1. Up-sampling
-2. Down-sampling
-3. Over-Under-Sampling
-
-—
-
-Down sampling: Balance the dataset by reducing the size of the abundant
-class(es) to match the frequencies in the least prevalent class.
-
-By keeping all samples in the rare class and randomly selecting an equal number
-of samples in the abundant class, a balanced new dataset can be retrieved for
-further modeling. Furthermore, the reduced sample size reduces the computation
-burden imposed by further steps in the ML process.
-
-Important: Use If there are enough data
-
-—
-
-Up-sampling:
-
-On the contrary, up-sampling is used when the quantity of data is insufficient.
-It tries to balance the dataset by increasing the size of rarer samples. Rather
-than getting rid of abundant samples, new rare samples are generated by using
-repetition or bootstrapping (described further in Section 2.4.2).
-
-A combination of over- and under-sampling is often successful and a common
-approach is known as Synthetic Minority Over-Sampling Technique, or SMOTE
-(Chawla et al. 2002).
-
-Resampling methods
-
-1. K-fold cross validation
-2. Bootstrapping
-
-For other measures see the Anki card.
-
-K-fold cross validation
-
-…A resampling method that randomly divides the training data into k groups (aka
-folds) of approximately equal size.
-
-The model is fit on k−1 folds and then the remaining fold is used to compute
-model performance.
-
-This procedure is repeated k times; each time, a different fold is treated as
-the validation set. This process results in k estimates of the generalization
-error (say ϵ1,ϵ2,…,ϵk).
-
-Thus, the k-fold CV estimate is computed by averaging the k test errors,
-providing us with an approximation of the error we might expect on unseen data.
-
-Note: This is kind of the sampling distribution for the model performance(?)
-
-n practice, one typically uses k=5 or k=10. There is no formal rule as to the
-size of k; however, as k gets larger, the difference between the estimated
-performance and the true performance to be seen on the test set will decrease.
-On the other hand, using too large k can introduce computational burdens.
-Moreover, Molinaro, Simon, and Pfeiffer (2005) found that k=10 performed
-similarly to leave-one-out cross validation (LOOCV) which is the most extreme
-approach (i.e., setting k=n).
-
-Although using k≥10 helps to minimize the variability in the estimated
-performance, k-fold CV still tends to have higher variability than bootstrapping
-(discussed next). Kim (2009) showed that repeating k-fold CV can help to
-increase the precision of the estimated generalization error. Consequently, for
-smaller data sets (say n<10,000), 10-fold CV repeated 5 or 10 times will improve
-the accuracy of your estimated performance and also provide an estimate of its
-variability
-
-CV as you can often perform CV directly within certain ML functions:
-
-Or externally as in the below chunk5. When applying it externally to an ML
-algorithm as below, we’ll need a process to apply the ML model to each resample,
-which we’ll also cover.
-
-as.h2o(<my-data-frame>)
-
-ordered factors and H2O has no way of handling this data type. Consequently, you
-must convert any ordered factors to unordered; see ?base::ordered
-
-see the sampling argument in ?caret::trainControl()
-
-h2o algorithms have a weights_column and balance_classes
-
-Many of these drawbacks and inconsistencies were originally organized and
-presented by Kuhn (2018)
-
-The caret package has been the preferred meta engine over the years; however,
-the author is now transitioning to full-time development on parsnip, which is
-designed to be a more robust and tidy meta engine.↩
-
-## Chapter 2: Modeling Process
-
-```{r}
-# Helper packages
-pkgs <- c("rsample", # Resampling procedures
-          "caret",   # Resampling and model training 
-          "h20")     # Resampling and model training
-           
-# lapply(pkgs, library, character.only=TRUE) 
-
-# h2o 
-h2o::h2o.no_progress() # Avoid the progress bars in the output
-h2o::h2o.init()
-```
-
-```{r}
-?AmesHousing::ames_raw
-
-# Ames housing data
-ames <- AmesHousing::make_ames()
-
-# Coerce to a h2o frame
-ames_h2o <- h2o::as.h2o(ames)
-
-# Job attrition data
-# Note: the data are now in the modeldata package
-churn <- modeldata::attrition
-```
-
-Important: h2o cannot handle ordered factors so we need to coerce them to 
-unordered factors before the analysis.
-
-```{r}
-# Coerce ordered factors
-unorder_if <- function(x) ifelse(is.ordered(x), factor(x, ordered = FALSE), x)
-# Trick: Use '[]' to keep the data frame structure
-churn[] <- lapply(churn, unorder_if)
-```
-
-### Data splitting
-
-Simple random sampling and stratified sampling
-
-#### Simple random sampling
-
-Use `base` and no additional packages
-
-```{r}
-# Reproduceable results
-set.seed(123)
-# Number of rows
-n_rows <- nrow(ames)
-# Row index
-row_index <- seq(n_rows)
-# Index for the training cases
-train_index <- sample(row_index, size = round(n_rows) * 0.7, replace = FALSE)
-# Training set
-train <- ames[train_index,] ; cat("Training set: ", dim(train), "\n")
-# Testing set
-test <- ames[-train_index,] ; cat("Testing set: ", dim(test), "\n")
-# Plausibility check
-cat("Split: ", dim(train)[1] / n_rows * 100, "/", dim(test)[1] / n_rows * 100)
-```
-
-Use the `caret` package
-
-```{r}
-set.seed(123)
-```
-
-
-Use the `rsample` package
-
-```{r}
-set.seed(123)
-```
-

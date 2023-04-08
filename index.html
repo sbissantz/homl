@@ -570,7 +570,7 @@ which tend to break with highly correlated variables, or have a data set
 where the predictors are so rich that we can’t process them with our
 machines, we can use PCA to compress the data set fully, i.e. reduce it
 with minimal loss in recovery to the smallest amount of uncorrelated
-variables – components.</p>
+variables – the principal components.</p>
 <p><strong>Meaningful compression</strong>: If we want to understand or
 model the structural relationships between variables with more
 flexibility (i.e. <span class="math inline">\(\Phi\)</span>) we can try
@@ -624,11 +624,11 @@ h2o::h2o.init()</code></pre>
 <pre><code>##  Connection successful!
 ## 
 ## R is connected to the H2O cluster: 
-##     H2O cluster uptime:         13 days 1 hours 
+##     H2O cluster uptime:         14 days 30 minutes 
 ##     H2O cluster timezone:       Europe/Berlin 
 ##     H2O data parsing timezone:  UTC 
 ##     H2O cluster version:        3.40.0.1 
-##     H2O cluster version age:    1 month and 29 days 
+##     H2O cluster version age:    1 month and 30 days 
 ##     H2O cluster name:           H2O_started_from_R_steven_qdt481 
 ##     H2O cluster total nodes:    1 
 ##     H2O cluster total memory:   3.95 GB 
@@ -694,7 +694,7 @@ unseen data, like the validation set.</p>
 <li>Spending too much in training (e.g., &gt;80%) won’t allow us to get
 a good assessment of predictive performance. We may find a model that
 fits the training data very well, but is not generalizable
-(overfitting).</li>
+(<em>overfitting</em>).</li>
 <li>Sometimes too much spent in testing (&gt;40%) won’t allow us to get
 a good assessment of model parameters.</li>
 </ul>
@@ -721,14 +721,27 @@ signals in the features.</li>
 </div>
 <div id="simple-random-sampling-splitting" class="section level4">
 <h4>Simple random sampling splitting</h4>
-<p>Take a simple random sample from the data – with the desired
-probability</p>
+<p><strong>Simple random sampling splitting</strong>: Take a simple
+random sample from the data – with the desired probability</p>
+<p><strong>Simple random sampling</strong>: A sampling method where each
+member of the population has an equal and independent chance of being
+selected for the sample. This means that every possible sample of the
+desired size has an equal probability of being selected.</p>
+<p><em>Procedure</em>: Assing each member of the population a unique
+identification number, and use a random number generator to select the
+required number of samples.</p>
+<p><em>Benefits</em>: …considered to be unbiased and used to minimize
+the risk of selection bias, where certain subgroups of the population
+are overrepresented or underrepresented in the sample.</p>
 <p><em>Problem</em>: Does not control for any data attributes, such as
 the distribution of your response variable (<span class="math inline">\(y\)</span>).</p>
+<p><em>Usecases</em>: Classification and regression problems when we
+have a sufficient sample size. In classification problems especially
+when there is a good balance between the classes.</p>
 </div>
 <div id="simple-random-sampling" class="section level4">
 <h4>Simple random sampling</h4>
-<p>Use <code>base</code> and no additional packages</p>
+<p>Use <code>base</code> and no additional packages.</p>
 <pre class="r"><code># Reproduceable results
 set.seed(123)
 # Number of rows
@@ -746,23 +759,55 @@ test &lt;- ames[-train_index,] ; cat(&quot;Testing set: &quot;, dim(test), &quot
 <pre class="r"><code># Plausibility check
 cat(&quot;Split: &quot;, dim(train)[1] / n_rows * 100, &quot;/&quot;, dim(test)[1] / n_rows * 100)</code></pre>
 <pre><code>## Split:  70 / 30</code></pre>
-<p>Use the <code>caret</code> package</p>
-<pre class="r"><code>set.seed(123)</code></pre>
-<p>Use the <code>rsample</code> package</p>
-<pre class="r"><code>set.seed(123)</code></pre>
+<p>Use the <code>caret</code> package.</p>
+<pre class="r"><code>set.seed(123)
+
+# Reproduceable results
+train_index &lt;- caret::createDataPartition(ames$Sale_Price, p = 0.7, 
+                               # Matrix instead of a list as output
+                               list = FALSE)
+# Training set
+train &lt;- ames[train_index,] ; cat(&quot;Training set: &quot;, dim(train), &quot;\n&quot;)</code></pre>
+<pre><code>## Training set:  2053 81</code></pre>
+<pre class="r"><code># Testing set
+test &lt;- ames[-train_index,] ; cat(&quot;Testing set: &quot;, dim(test), &quot;\n&quot;)</code></pre>
+<pre><code>## Testing set:  877 81</code></pre>
+<pre class="r"><code># Plausibility check
+cat(&quot;Split: &quot;, dim(train)[1] / n_rows * 100, &quot;/&quot;, dim(test)[1] / n_rows * 100)</code></pre>
+<pre><code>## Split:  70.06826 / 29.93174</code></pre>
+<p>Use the <code>rsample</code> package.</p>
+<pre class="r"><code>set.seed(123)  # for reproducibility
+split_1  &lt;- rsample::initial_split(ames, prop = 0.7)
+print(split_1)</code></pre>
+<pre><code>## &lt;Training/Testing/Total&gt;
+## &lt;2051/879/2930&gt;</code></pre>
+<pre class="r"><code># Training set
+train &lt;- rsample::training(split_1)
+# Testing set
+test &lt;- rsample::testing(split_1)
+# Plausibility check
+cat(&quot;Split: &quot;, dim(train)[1] / n_rows * 100, &quot;/&quot;, dim(test)[1] / n_rows * 100)</code></pre>
+<pre><code>## Split:  70 / 30</code></pre>
 </div>
 <div id="stratified-sampling-splitting" class="section level4">
 <h4>Stratified sampling splitting</h4>
-<p>Take a stratified sample from the data – with the desired
-probability</p>
-<p>Allows to explicitly control the sampling so that our training and
-test sets have similar Y distributions</p>
-<p>Procedure: Segment Y into classes (discrete y) or quantiles
-(continuous y) and randomly sample from each.</p>
-<p>Classification problems: When y is severely imbalanced (e.g., 90%
-“Yes” and 10% “No”). See also: Class Imbalances</p>
-<p>Regression problems: With small sample size and where y deviates
-strongly from normality (i.e., positively skewed like Sale_Price).</p>
+<p><strong>Stratified sampling splitting</strong>: Take a stratified
+sample from the data – with the desired probability.</p>
+<p><strong>Stratified sampling</strong>: A sampling method where the
+population is divided into subgroups (aka., <em>strata</em>), and then a
+random sample is taken from each subgroup (aka. <em>stratum</em>) in
+proportion to their size or importance.</p>
+<p><em>Procedure</em>: Segment Y into classes (discrete <span class="math inline">\(y\)</span>) or quantiles (continuous <span class="math inline">\(y\)</span>) and randomly sample from each.</p>
+<p><em>Benefits</em>: Allows to explicitly control the sampling so that
+our training and test sets have similar Y distributions</p>
+<p><em>Usecases</em>: Classification and regression problems</p>
+<ol style="list-style-type: decimal">
+<li><em>Classification problems</em>: When y is severely imbalanced
+(e.g., 90% “Yes” and 10% “No”). See also: Class Imbalances</li>
+<li><em>Regression problems</em>: With small sample size and where y
+deviates strongly from normality (i.e., positively skewed like
+Sale_Price).</li>
+</ol>
 </div>
 <div id="class-imbalances" class="section level4">
 <h4>Class imbalances</h4>

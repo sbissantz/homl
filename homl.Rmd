@@ -231,7 +231,7 @@ Full -- orthogonal -- compression versus meaningful compression:
 highly correlated variables, or have a data set where the predictors are so
 rich that we can't process them with our machines, we can use PCA to compress
 the data set fully, i.e. reduce it with minimal loss in recovery to the
-smallest amount of uncorrelated variables -- components.
+smallest amount of uncorrelated variables -- the principal components.
 
 **Meaningful compression**:  If we want to understand or model the structural
 relationships between variables with more flexibility (i.e. $\Phi$) we can try
@@ -339,7 +339,7 @@ training data and its performance on new, unseen data, like the validation set.
 
 * Spending too much in training (e.g., >80%) won't allow us to get a good
   assessment of predictive performance. We may find a model that fits the
-  training data very well, but is not generalizable (overfitting).
+  training data very well, but is not generalizable (*overfitting*).
 * Sometimes too much spent in testing (>40%) won't allow us to get a good
   assessment of model parameters.
 
@@ -362,14 +362,32 @@ Small gains with additional data as compared to smaller sample sizes.
 
 #### Simple random sampling splitting
 
-Take a simple random sample from the data -- with the desired probability
+ **Simple random sampling splitting**: Take a simple random sample from the
+ data -- with the desired probability
+
+**Simple random sampling**: A sampling method where each member of the
+population has an equal and independent chance of being selected for the
+sample. This means that every possible sample of the desired size has an equal
+probability of being selected. 
+
+*Procedure*: Assing each member of the population a unique identification
+number, and use a random number generator to select the required number of
+samples. 
+
+*Benefits*: ...considered to be unbiased and used to minimize the risk of
+selection bias, where certain subgroups of the population are overrepresented
+or underrepresented in the sample. 
 
 *Problem*: Does not control for any data attributes, such as the distribution
 of your response variable ($y$).
 
+*Usecases*: Classification and regression problems when we have a sufficient
+sample size. In classification problems especially when there is a good balance
+between the classes.
+
 #### Simple random sampling
 
-Use `base` and no additional packages
+Use `base` and no additional packages.
 
 ```{r}
 # Reproduceable results
@@ -388,34 +406,58 @@ test <- ames[-train_index,] ; cat("Testing set: ", dim(test), "\n")
 cat("Split: ", dim(train)[1] / n_rows * 100, "/", dim(test)[1] / n_rows * 100)
 ```
 
-Use the `caret` package
+Use the `caret` package.
 
 ```{r}
 set.seed(123)
+
+# Reproduceable results
+train_index <- caret::createDataPartition(ames$Sale_Price, p = 0.7, 
+                               # Matrix instead of a list as output
+                               list = FALSE)
+# Training set
+train <- ames[train_index,] ; cat("Training set: ", dim(train), "\n")
+# Testing set
+test <- ames[-train_index,] ; cat("Testing set: ", dim(test), "\n")
+# Plausibility check
+cat("Split: ", dim(train)[1] / n_rows * 100, "/", dim(test)[1] / n_rows * 100)
 ```
 
-
-Use the `rsample` package
+Use the `rsample` package.
 
 ```{r}
-set.seed(123)
+set.seed(123)  # for reproducibility
+split_1  <- rsample::initial_split(ames, prop = 0.7)
+print(split_1)
+# Training set
+train <- rsample::training(split_1)
+# Testing set
+test <- rsample::testing(split_1)
+# Plausibility check
+cat("Split: ", dim(train)[1] / n_rows * 100, "/", dim(test)[1] / n_rows * 100)
 ```
 
 #### Stratified sampling splitting
 
-Take a stratified sample from the data -- with the desired probability
+**Stratified sampling splitting**: Take a stratified sample from the data --
+with the desired probability.
 
-Allows to explicitly control the sampling so that our training and test sets
-have similar Y distributions
+**Stratified sampling**: A sampling method where the population is divided into
+subgroups (aka., *strata*), and then a random sample is taken from each
+subgroup (aka. *stratum*) in proportion to their size or importance. 
 
-Procedure: Segment Y into classes (discrete y) or quantiles (continuous y) and
-randomly sample from each.
+*Procedure*: Segment Y into classes (discrete $y$) or quantiles (continuous $y$)
+and randomly sample from each.
 
-Classification problems: When y is severely imbalanced (e.g., 90% “Yes” and 10%
-“No”). See also: Class Imbalances
+*Benefits*: Allows to explicitly control the sampling so that our training and
+test sets have similar Y distributions
 
-Regression problems: With small sample size and where y deviates strongly from
-normality (i.e., positively skewed like Sale_Price).
+*Usecases*: Classification and regression problems
+
+1. *Classification problems*: When y is severely imbalanced (e.g., 90% “Yes” and
+   10% “No”). See also: Class Imbalances 
+2. *Regression problems*: With small sample size and where y deviates strongly
+   from normality (i.e., positively skewed like Sale_Price).
 
 #### Class imbalances
 

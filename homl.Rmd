@@ -289,6 +289,7 @@ ames_h2o <- h2o::as.h2o(ames)
 # Job attrition data
 # Note: the data are now in the modeldata package
 churn <- modeldata::attrition
+str(churn)
 ```
 
 Important: h2o cannot handle ordered factors so we need to coerce them to 
@@ -296,9 +297,13 @@ unordered factors before the analysis.
 
 ```{r}
 # Coerce ordered factors
-unorder_if <- function(x) ifelse(is.ordered(x), factor(x, ordered = FALSE), x)
+unorder_if <- function(x) {
+  # Have to call 'return()' explicitally
+  ifelse(is.ordered(x), factor(x, ordered = FALSE), return(x))
+  }
 # Trick: Use '[]' to keep the data frame structure
 churn[] <- lapply(churn, unorder_if)
+str(churn)
 ```
 
 **No free lunch theorem** (Wolpert 1996): "There is no single  model that can
@@ -427,12 +432,11 @@ Use the `rsample` package.
 
 ```{r}
 set.seed(123)  # for reproducibility
-split_1  <- rsample::initial_split(ames, prop = 0.7)
-print(split_1)
+split  <- rsample::initial_split(ames, prop = 0.7)
 # Training set
-train <- rsample::training(split_1)
+train <- rsample::training(split)
 # Testing set
-test <- rsample::testing(split_1)
+test <- rsample::testing(split)
 # Plausibility check
 cat("Split: ", dim(train)[1] / n_rows * 100, "/", dim(test)[1] / n_rows * 100)
 ```
@@ -446,18 +450,43 @@ with the desired probability.
 subgroups (aka., *strata*), and then a random sample is taken from each
 subgroup (aka. *stratum*) in proportion to their size or importance. 
 
-*Procedure*: Segment Y into classes (discrete $y$) or quantiles (continuous $y$)
-and randomly sample from each.
+*Procedure*: Segment $y$ into classes (discrete $y$) or quantiles (continuous
+$y$) and randomly sample from each.
 
 *Benefits*: Allows to explicitly control the sampling so that our training and
 test sets have similar Y distributions
 
 *Usecases*: Classification and regression problems
 
-1. *Classification problems*: When y is severely imbalanced (e.g., 90% “Yes” and
+1. *Classification problems*: When $y$ is severely imbalanced (e.g., 90% “Yes” and
    10% “No”). See also: Class Imbalances 
 2. *Regression problems*: With small sample size and where y deviates strongly
    from normality (i.e., positively skewed like Sale_Price).
+
+```{r}
+# Data with class imbalances 
+table(churn$Attrition) |> prop.table()
+```
+
+Stratified sampling using the `rsample` package.
+
+TODO
+
+```{r}
+set.seed(123)
+split_strat <- rsample::initial_split(churn, prop = 0.7, strata = "Attrition")
+train <- rsample::training(split_strat) 
+test <- rsample::testing(split_strat) 
+# Plausibility check
+cat("Split: ", dim(train)[1] / n_rows * 100, "/", dim(test)[1] / n_rows * 100)
+```
+
+
+
+
+
+
+
 
 #### Class imbalances
 

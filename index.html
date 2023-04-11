@@ -624,14 +624,14 @@ h2o::h2o.init()</code></pre>
 <pre><code>##  Connection successful!
 ## 
 ## R is connected to the H2O cluster: 
-##     H2O cluster uptime:         20 minutes 23 seconds 
+##     H2O cluster uptime:         23 hours 24 minutes 
 ##     H2O cluster timezone:       Europe/Berlin 
 ##     H2O data parsing timezone:  UTC 
 ##     H2O cluster version:        3.40.0.1 
-##     H2O cluster version age:    2 months and 1 day 
+##     H2O cluster version age:    2 months and 2 days 
 ##     H2O cluster name:           H2O_started_from_R_steven_edc276 
 ##     H2O cluster total nodes:    1 
-##     H2O cluster total memory:   3.97 GB 
+##     H2O cluster total memory:   3.70 GB 
 ##     H2O cluster total cores:    8 
 ##     H2O cluster allowed cores:  8 
 ##     H2O cluster healthy:        TRUE 
@@ -934,8 +934,8 @@ data is insufficient.</p>
 <div id="over-under-sampling" class="section level4">
 <h4>Over-Under-Sampling</h4>
 <p><strong>SMOTE</strong>: A combination of over- and under-sampling is
-often successful. A common approach is known as Synthetic Minority
-Over-Sampling Technique (SMOTE, Chawla et al. 2002).</p>
+often successful. A common approach is known as <em>Synthetic Minority
+Over-Sampling Technique</em> (SMOTE, Chawla et al. 2002).</p>
 </div>
 </div>
 <div id="resampling-methods" class="section level3">
@@ -947,35 +947,42 @@ Over-Sampling Technique (SMOTE, Chawla et al. 2002).</p>
 <p><em>Note</em>: For other measures see the Anki card</p>
 <div id="k-fold-cross-validation" class="section level4">
 <h4>K-fold cross validation</h4>
-<p><strong>K-fold cross validation</strong>: A resampling method that
-randomly divides the training data into k groups (aka., folds) of
-approximately equal size. The model is fit on k-1 folds and then the
-remaining fold is used to compute model performance. This procedure is
-repeated k times; each time, a different fold is treated as the testing
-(aka. validation) set. This process results in k estimates of the
-generalization error.</p>
-<p>Thus, the k-fold CV estimate is computed by averaging the k test
-errors, providing us with an approximation of the error we might expect
-on unseen data.</p>
-<p>Note: This is kind of the sampling distribution for the model
-performance</p>
-<p>In practice, one typically uses k=5 or k=10. There is no formal rule
-as to the size of k; however, as k gets larger, the difference between
-the estimated performance and the true performance to be seen on the
-test set will decrease. On the other hand, using too large k can
-introduce computational burdens. Moreover, Molinaro, Simon, and Pfeiffer
-(2005) found that k=10 performed similarly to leave-one-out cross
-validation (LOOCV) which is the most extreme approach (i.e., setting
-k=n).</p>
-<p>Although using k≥10 helps to minimize the variability in the
-estimated performance, k-fold CV still tends to have higher variability
-than bootstrapping (discussed next).</p>
+<p><strong>K-fold cross validation</strong>: A resampling method where
+we randomly divide the training data into k groups (aka., folds) of
+approximately equal size. The model is fit on k-1 folds and then we
+compute the model performance on remaining fold (aka. validation set).
+Repeating this procedure k times (each time with a different validation
+fold) yields k estimates of the generalization error. Providing us with
+an approximation of the error we might expect on unseen data.</p>
+<p><em>Note:</em> The overall k-fold CV estimate is often computed by
+averaging the k estimates of the generalization error.</p>
+<p><strong>The number of folds trade-off</strong>: The larger <span class="math inline">\(k\)</span> the smaller the difference between the
+estimated performance/generalization error and the true
+performance/generalization error. However, there are computational
+burdens.</p>
+<p><strong>The number of folds</strong>: …often <span class="math inline">\(k = 5\)</span> or <span class="math inline">\(k =
+10\)</span>. Molinaro, Simon, and Pfeiffer (2005): <span class="math inline">\(k=10\)</span> performed similarly to leave-one-out
+cross validation (LOOCV) where <span class="math inline">\(k=n\)</span>.</p>
+<p><strong>Bootstrapping vs. K-fold CV</strong>: Although using <span class="math inline">\(k≥10\)</span> helps to minimize the variability in
+the estimated performance, k-fold CV still tends to have higher
+variability than bootstrapping (discussed next).</p>
 <p><em>Important</em>: Kim (2009) showed that repeating k-fold CV can
 help to increase the precision of the estimated generalization error.
 Consequently, for smaller data sets (say <span class="math inline">\(n
 &lt; 10,000\)</span>), 10-fold CV repeated 5 or 10 times will improve
 the accuracy of your estimated performance and also provide an estimate
 of its variability</p>
+<p><strong>When should we use k-fold CV</strong>? When the data are
+abundant and diverse.</p>
+<p><strong>When should we use bootstrapping</strong>? When the data are
+limited or there is a need to generate multiple datasets for model
+training.</p>
+<p><strong>Why should we use bootstrapping if the data are
+limited</strong>? Because it allows for generating multiple datasets
+that can be used to train models.</p>
+<p><em>Note</em>: With multiple data sets, train the model on the
+combined data set.</p>
+<p>TODO</p>
 <p>CV as you can often perform CV directly within certain ML
 functions:</p>
 <pre class="r"><code># Example using h2o

@@ -560,17 +560,9 @@ data sets (say $n < 10,000$), 10-fold CV repeated 5 or 10 times will improve the
 accuracy of your estimated performance and also provide an estimate of its
 variability
 
-**When should we use k-fold CV**? When the data are abundant and diverse.
-
-**When should we use bootstrapping**? When the data are limited or there is a
-need to generate multiple datasets for model training.
-
-**Why should we use bootstrapping if the data are limited**? Because it allows
-for generating multiple datasets that can be used to train models. 
-
 *Note*: With multiple data sets, train the model on the combined data set.
-
-TODO
+This can be done with the `data.table` package. To stack rows of multiple
+`data.tables` together, use the `rbindlist()` function.
 
 CV as you can often perform CV directly within certain ML functions:
 
@@ -585,15 +577,12 @@ h2o.cv <- h2o::h2o.glm(
 ```
 
 Or externally as in the below chunk5. When applying it externally to an ML
-algorithm as below, we’ll need a process to apply the ML model to each resample,
-which we’ll also cover.
+algorithm as below, we'll need a process to apply the ML model to each resample,
+which we'll also cover.
 
 ```{r}
 rsample::vfold_cv(ames, v = 10)
 ```
-
-
-
 
 
 as.h2o(<my-data-frame>)

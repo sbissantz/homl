@@ -531,28 +531,28 @@ Chawla et al. 2002).
 
 #### K-fold cross validation
 
-**K-fold cross validation**: A resampling method where we randomly divide the
-training data into k groups (aka., folds) of approximately equal size. The
-model is fit on k-1 folds and then we compute the model performance on
-remaining fold (aka. validation set). Repeating this procedure k times (each
-time with a different validation fold) yields k estimates of the generalization
-error. Providing us with an approximation of the error we might expect on
-unseen data.
+**K-fold cross validation**: A resampling method that provides us with an
+approximation of the generalization error, i.e. the error that we might expect
+on unseen data.
+
+*Procedure*: Randomly divide the training data into k groups (aka., folds) of
+approximately equal size. Fit the model on k-1 folds and then compute the model
+performance on remaining fold (aka. validation set). Repeating this procedure k
+times (each time with a different validation fold) yields k estimates of the
+generalization error. 
 
 *Note:* The overall k-fold CV estimate is often computed by averaging the k
 estimates of the generalization error. 
 
 **The number of folds trade-off**: The larger $k$ the smaller the difference
 between the estimated performance/generalization error and the true
-performance/generalization error. However, there are computational burdens.
+performance/generalization error. I.e. Increasing $k$ helps to minimize the
+variability in the estimated performance, However, there are computational
+burdens.
 
 **The number of folds**: ...often $k = 5$ or $k = 10$. Molinaro, Simon, and
 Pfeiffer (2005): $k=10$ performed similarly to leave-one-out cross validation
 (LOOCV) where $k=n$.
-
-**Bootstrapping vs. K-fold CV**: Although using $k≥10$ helps to minimize the
-variability in the estimated performance, k-fold CV still tends to have higher
-variability than bootstrapping (discussed next). 
 
 *Important*: Kim (2009) showed that repeating k-fold CV can help to increase
 the precision of the estimated generalization error. Consequently, for smaller
@@ -575,17 +575,61 @@ h2o.cv <- h2o::h2o.glm(
   nfolds = 10  # perform 10-fold CV
 )
 ```
+You can alsp apply CV externally to an ML algorithm as below:
 
-Or externally as in the below chunk5. When applying it externally to an ML
-algorithm as below, we'll need a process to apply the ML model to each resample,
-which we'll also cover.
+*Note:* When applying it externally to an ML algorithm as below, we'll need a
+process to apply the ML model to each resample.
 
 ```{r}
 rsample::vfold_cv(ames, v = 10)
 ```
 
+#### Bootstrapping
 
-as.h2o(<my-data-frame>)
+**Bootstrap sample**: ...a random sample of the data taken with replacement
+(Efron and Tibshirani 1986).
+
+*Note*: Bootstrap sampling will contain approximately the same distribution of
+values (represented by colors) as the original data set, especially
+if $n_b \rightarrow n$.
+
+**Out-of-bag (OOB) Observations**: Observations that are not included in in a
+particular bootstrap sample.
+
+*How can we use bootstrapping for validation*? Build a model on the selected
+samples and validated it on the OOB samples; this is often done, for example,
+in random forests (see Chapter 11).
+
+*Procedure*: Draw a random sample (with replacement) from the full data set;
+for example, $n_b = 0.8*n$. Keep the rest of the data, i.e. 20%, for
+validation. Note that other splitting ratios are also possible (e.g., 70/30),
+but obey the *Rough guidelines for the split* (see above). Repeat the procedure
+b times to generate $b$ bootsrap samples. A thorough introduction to the
+bootstrap and its use in R is provided in Davison, Hinkley, and others (1997).
+
+*Note*: Bootstrapping is, typically, more of an internal resampling procedure
+that is naturally built into certain ML algorithms, such as bagging and random
+forests.
+
+We can create bootstrap samples with the `rsample` package:
+
+```{r}
+# 80/20 split, b=10 bootstrap samples
+rsample::bootstraps(ames, times = 10, size = 0.8)
+```
+
+#### Bootstrapping vs. K-fold CV
+
+Since observations are replicated in bootstrapping, there tends to be less
+variability in the error measure compared with k-fold CV (Efron 1983). However,
+this can also increase the bias of your error estimate. This can be problematic
+with smaller data sets; however, for most average-to-large data sets (say
+$n \geq 1,000$) this concern is often negligible.
+
+
+
+
+
 
 
 see the sampling argument in ?caret::trainControl()
@@ -640,7 +684,7 @@ not possible with your data.
 *Open Question*: I think this holds only for feed forward neural nets such as
 MLPs. Recurrent Neural Networks (RNNs) and Convolutional Neural Networks
 (CNNs), for instance, can be used to model time series data and image data,
-respectively, and are not limited to pointwise linear function approximation.
+respectiively, and are not limited to pointwise linear function approximation.
 
 
 ~ Fourier series, Taylor expansion?

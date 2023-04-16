@@ -553,11 +553,11 @@ better learn patterns from the minority class.
 imbalanced data" Giovanna Menardi and Nicola Torelli compare algorithms for
 dealing class imbalances .
 
-*ROSE vs SMOTE*: It is often recommended to try multiple oversampling
+*ROSE vs. SMOTE*: It is often recommended to try multiple oversampling
 techniques and evaluate their effectiveness using appropriate performance
 metrics on a validation set.
 
-SMOTHE and ROSE are both implemented in the `caret` package. Use the `sampling`
+SMOTE and ROSE are both implemented in the `caret` package. Use the `sampling`
 argument with the option `smote` or `rose`. There is also the `DMwR` and the
 `ROSE` package.
 
@@ -677,14 +677,94 @@ minimize biases experienced with bootstrapping on smaller data sets and are
 available via `caret` (see the `boot632` argument in `caret::trainControl` for
 details).
 
+```{r}
+caret::trainControl(
+  method = "boot632",
+  number = 10,
+  repeats = 5
+)
+```
+
 ##### Bootstrapping with time series
 
 Hyndman and Athanasopoulos (2018) is the dominant, R-focused, time series
-resource
+resource. 
+
+*Note*: Hyndman published together with Talagala in 2022 a paper on
+"meta-learning how to forecast time series". This is interesting because
+time series is a nested data structure.
 
 ### Bias variance trade-off
 
+We can decompose the prediction error into  (1) an error due to "bias" and (2) 
+an error due to "variance". There is often a tradeoff between a model's ability
+to minimize bias and variance. 
 
+#### Bias
+
+TODO
+
+**Bias (error) function**: A function that measures the difference between the
+expected (or average) model prediction and the correct value which we are
+trying to predict. 
+
+*Note:* This provides a sense of how well a model can conform to the underlying
+structure of the data. 
+
+*Example*: Gradient Boosting Machines are low bias model as they are flexible
+enough to capture non-linear, non-monotonic relationships. In contrast, linear
+models are high bias as they are less flexible and rarely capture non-linear,
+non-monotonic relationships.
+
+**Bias, Variance and Resampling**: Models with high bias are rarely affected by
+the noise introduced by resampling. If a model has high bias, it will have
+consistency in its resampling performance
+
+underlying non-linear, non-monotonic data structure (left). Models fit to 25
+bootstrapped replicates of the data are underterred by the noise and generates
+similar, yet still biased, predictions (right). 
+
+#### Variance
+
+TODO
+
+**Variance (error) function**: A function that measures the variability of a
+model prediction for a given data point. 
+
+*Example**: K-nearest neighbor, Decision trees, gradient boosting machines are
+very adaptable to non-linear data structures. However, they tend to overfit the
+training data. Although you may achieve very good performance on your training
+data, the model will not automatically generalize well to unseen data.
+
+High adaptibility (lots of hyperparameters), overfitting, high variance
+
+individual data points (left). Models fit to 25 bootstrapped replicates of the
+data are deterred by the noise and generate highly variable predictions
+
+**Bias, Variance and Resampling**: Since high variance models are more prone to
+overfitting, using resampling procedures (e.g. bootstrapping, k-fold CV) are
+critical to reduce this risk. Moreover, many algorithms that are capable of
+achieving high generalization performance have lots of hyperparameters that
+control the level of model complexity (i.e., the tradeoff between bias and
+variance).
+
+Note to self: Is this why a stack of GBMs performs better than a single GBM?
+Idea: if we combine a lot of high variance, low bias models, and then use a DNN
+to regularize as meta-model, we should be good to go. DNNs can stronger
+regularize than LASSO, Ridge, etc. Way better would be a DNN optimized by a GP
+or a GP or a Stack of DNNs
+
+#### Hyperparameters
+
+Hyperparameters (aka tuning parameters) are the “knobs to twiddle”7 to control
+the complexity of machine learning algorithms and, therefore, the bias-variance
+trade-off. Not all algorithms have hyperparameters (e.g., ordinary least
+squares8); however, most have at least one or more.
+
+
+
+
+### MISC
 
 
 h2o algorithms have a weights_column and balance_classes

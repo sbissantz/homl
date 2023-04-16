@@ -624,11 +624,11 @@ h2o::h2o.init()</code></pre>
 <pre><code>##  Connection successful!
 ## 
 ## R is connected to the H2O cluster: 
-##     H2O cluster uptime:         3 days 23 hours 
+##     H2O cluster uptime:         6 days 57 minutes 
 ##     H2O cluster timezone:       Europe/Berlin 
 ##     H2O data parsing timezone:  UTC 
 ##     H2O cluster version:        3.40.0.1 
-##     H2O cluster version age:    2 months and 5 days 
+##     H2O cluster version age:    2 months and 7 days 
 ##     H2O cluster name:           H2O_started_from_R_steven_edc276 
 ##     H2O cluster total nodes:    1 
 ##     H2O cluster total memory:   3.69 GB 
@@ -957,10 +957,10 @@ from the minority class.</p>
 <p><em>Note</em>: In their paper “Training and assessing classification
 rules with imbalanced data” Giovanna Menardi and Nicola Torelli compare
 algorithms for dealing class imbalances .</p>
-<p><em>ROSE vs SMOTE</em>: It is often recommended to try multiple
+<p><em>ROSE vs. SMOTE</em>: It is often recommended to try multiple
 oversampling techniques and evaluate their effectiveness using
 appropriate performance metrics on a validation set.</p>
-<p>SMOTHE and ROSE are both implemented in the <code>caret</code>
+<p>SMOTE and ROSE are both implemented in the <code>caret</code>
 package. Use the <code>sampling</code> argument with the option
 <code>smote</code> or <code>rose</code>. There is also the
 <code>DMwR</code> and the <code>ROSE</code> package.</p>
@@ -1091,15 +1091,201 @@ both approaches seek to minimize biases experienced with bootstrapping
 on smaller data sets and are available via <code>caret</code> (see the
 <code>boot632</code> argument in <code>caret::trainControl</code> for
 details).</p>
+<pre class="r"><code>caret::trainControl(
+  method = &quot;boot632&quot;,
+  number = 10,
+  repeats = 5
+)</code></pre>
+<pre><code>## Warning: `repeats` has no meaning for this resampling method.</code></pre>
+<pre><code>## $method
+## [1] &quot;boot632&quot;
+## 
+## $number
+## [1] 10
+## 
+## $repeats
+## [1] 5
+## 
+## $search
+## [1] &quot;grid&quot;
+## 
+## $p
+## [1] 0.75
+## 
+## $initialWindow
+## NULL
+## 
+## $horizon
+## [1] 1
+## 
+## $fixedWindow
+## [1] TRUE
+## 
+## $skip
+## [1] 0
+## 
+## $verboseIter
+## [1] FALSE
+## 
+## $returnData
+## [1] TRUE
+## 
+## $returnResamp
+## [1] &quot;final&quot;
+## 
+## $savePredictions
+## [1] FALSE
+## 
+## $classProbs
+## [1] FALSE
+## 
+## $summaryFunction
+## function (data, lev = NULL, model = NULL) 
+## {
+##     if (is.character(data$obs)) 
+##         data$obs &lt;- factor(data$obs, levels = lev)
+##     postResample(data[, &quot;pred&quot;], data[, &quot;obs&quot;])
+## }
+## &lt;bytecode: 0x7feae83f3b58&gt;
+## &lt;environment: namespace:caret&gt;
+## 
+## $selectionFunction
+## [1] &quot;best&quot;
+## 
+## $preProcOptions
+## $preProcOptions$thresh
+## [1] 0.95
+## 
+## $preProcOptions$ICAcomp
+## [1] 3
+## 
+## $preProcOptions$k
+## [1] 5
+## 
+## $preProcOptions$freqCut
+## [1] 19
+## 
+## $preProcOptions$uniqueCut
+## [1] 10
+## 
+## $preProcOptions$cutoff
+## [1] 0.9
+## 
+## 
+## $sampling
+## NULL
+## 
+## $index
+## NULL
+## 
+## $indexOut
+## NULL
+## 
+## $indexFinal
+## NULL
+## 
+## $timingSamps
+## [1] 0
+## 
+## $predictionBounds
+## [1] FALSE FALSE
+## 
+## $seeds
+## [1] NA
+## 
+## $adaptive
+## $adaptive$min
+## [1] 5
+## 
+## $adaptive$alpha
+## [1] 0.05
+## 
+## $adaptive$method
+## [1] &quot;gls&quot;
+## 
+## $adaptive$complete
+## [1] TRUE
+## 
+## 
+## $trim
+## [1] FALSE
+## 
+## $allowParallel
+## [1] TRUE</code></pre>
 <div id="bootstrapping-with-time-series" class="section level5">
 <h5>Bootstrapping with time series</h5>
 <p>Hyndman and Athanasopoulos (2018) is the dominant, R-focused, time
-series resource</p>
+series resource.</p>
+<p><em>Note</em>: Hyndman published together with Talagala in 2022 a
+paper on “meta-learning how to forecast time series”. This is
+interesting because time series is a nested data structure.</p>
 </div>
 </div>
 </div>
 <div id="bias-variance-trade-off" class="section level3">
 <h3>Bias variance trade-off</h3>
+<p>We can decompose the prediction error into (1) an error due to “bias”
+and (2) an error due to “variance”. There is often a tradeoff between a
+model’s ability to minimize bias and variance.</p>
+<div id="bias" class="section level4">
+<h4>Bias</h4>
+<p>TODO</p>
+<p><strong>Bias (error) function</strong>: A function that measures the
+difference between the expected (or average) model prediction and the
+correct value which we are trying to predict.</p>
+<p><em>Note:</em> This provides a sense of how well a model can conform
+to the underlying structure of the data.</p>
+<p><em>Example</em>: Gradient Boosting Machines are low bias model as
+they are flexible enough to capture non-linear, non-monotonic
+relationships. In contrast, linear models are high bias as they are less
+flexible and rarely capture non-linear, non-monotonic relationships.</p>
+<p><strong>Bias, Variance and Resampling</strong>: Models with high bias
+are rarely affected by the noise introduced by resampling. If a model
+has high bias, it will have consistency in its resampling
+performance</p>
+<p>underlying non-linear, non-monotonic data structure (left). Models
+fit to 25 bootstrapped replicates of the data are underterred by the
+noise and generates similar, yet still biased, predictions (right).</p>
+</div>
+<div id="variance" class="section level4">
+<h4>Variance</h4>
+<p>TODO</p>
+<p><strong>Variance (error) function</strong>: A function that measures
+the variability of a model prediction for a given data point.</p>
+<p>*Example**: K-nearest neighbor, Decision trees, gradient boosting
+machines are very adaptable to non-linear data structures. However, they
+tend to overfit the training data. Although you may achieve very good
+performance on your training data, the model will not automatically
+generalize well to unseen data.</p>
+<p>High adaptibility (lots of hyperparameters), overfitting, high
+variance</p>
+<p>individual data points (left). Models fit to 25 bootstrapped
+replicates of the data are deterred by the noise and generate highly
+variable predictions</p>
+<p><strong>Bias, Variance and Resampling</strong>: Since high variance
+models are more prone to overfitting, using resampling procedures
+(e.g. bootstrapping, k-fold CV) are critical to reduce this risk.
+Moreover, many algorithms that are capable of achieving high
+generalization performance have lots of hyperparameters that control the
+level of model complexity (i.e., the tradeoff between bias and
+variance).</p>
+<p>Note to self: Is this why a stack of GBMs performs better than a
+single GBM? Idea: if we combine a lot of high variance, low bias models,
+and then use a DNN to regularize as meta-model, we should be good to go.
+DNNs can stronger regularize than LASSO, Ridge, etc. Way better would be
+a DNN optimized by a GP or a GP or a Stack of DNNs</p>
+</div>
+<div id="hyperparameters" class="section level4">
+<h4>Hyperparameters</h4>
+<p>Hyperparameters (aka tuning parameters) are the “knobs to twiddle”7
+to control the complexity of machine learning algorithms and, therefore,
+the bias-variance trade-off. Not all algorithms have hyperparameters
+(e.g., ordinary least squares8); however, most have at least one or
+more.</p>
+</div>
+</div>
+<div id="misc" class="section level3">
+<h3>MISC</h3>
 <p>h2o algorithms have a weights_column and balance_classes</p>
 <p>Many of these drawbacks and inconsistencies were originally organized
 and presented by Kuhn (2018)</p>

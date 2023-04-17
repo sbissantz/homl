@@ -700,36 +700,78 @@ We can decompose the prediction error into  (1) an error due to "bias" and (2)
 an error due to "variance". There is often a tradeoff between a model's ability
 to minimize bias and variance. 
 
-#### Bias
-
-TODO
+#### Bias TODO
 
 **Bias (error) function**: A function that measures the difference between the
 expected (or average) model prediction and the correct value which we are
 trying to predict. 
 
 *Note:* This provides a sense of how well a model can conform to the underlying
-structure of the data. 
+structure of the data. The higher the bias the less it adapts to the underlying
+structure - vice versa.
 
-*Example*: Gradient Boosting Machines are low bias model as they are flexible
-enough to capture non-linear, non-monotonic relationships. In contrast, linear
-models are high bias as they are less flexible and rarely capture non-linear,
-non-monotonic relationships.
+**Bias and underfitting**: High bias leads to underfitting
 
-**Bias, Variance and Resampling**: Models with high bias are rarely affected by
-the noise introduced by resampling. If a model has high bias, it will have
-consistency in its resampling performance
+Is this statement correct?
 
-underlying non-linear, non-monotonic data structure (left). Models fit to 25
-bootstrapped replicates of the data are underterred by the noise and generates
-similar, yet still biased, predictions (right). 
+, because the model is not flexible enough to capture the patterns, or regular
+features, in the data. Put another way, (with) the model (we) impose(s) a
+strong prior belief about the functional relationship between the input and
+output variables, which is biased towards a certain type of function that does
+not match the true underlying function ($f$). As a result, the model is unable
+to provied a good approximation ($\hat f$) of $f$. Consequently, the model
+doesn't fit the data well, and will be unable to make good predictions on new,
+unseen data.
 
-#### Variance
+*Consequences*: Bad predictions in-sample *and* out-of-sample (aka. high
+generalization error).
 
-TODO
+*Example*: Linear models are high bias as they are less flexible and rarely
+capture non-linear, non-monotonic relationships. In contrast, Gradient Boosting
+Machines are low bias model as they are flexible enough to capture non-linear,
+non-monotonic relationships. 
+
+**Bias, Variance and Resampling**: Models with high bias have a tendency to
+underfit the data and thus are rarely affected by the noise introduced by
+resampling. They are insensitive to the data, so to say. If a model has high
+bias, it will have consistency (*low variance*) in its resampling performance
+(e.g. on bootstrapped, or cross-validated data).
+
+#### Variance TODO
 
 **Variance (error) function**: A function that measures the variability of a
 model prediction for a given data point. 
+
+A model with high variance is overly complex and is often able to fit the
+training data well but has poor generalization performance, as it may overfit
+to noise and outliers in the training data.
+
+**Variance and overfitting**: High variance is the result of overfitting,
+Is this statement correct?
+
+because the model is not flexible enough to capture the patterns, or regular
+features, in the data. Put another way, (with) the model (we) impose(s) a
+almost no prior belief about the functional relationship between the input and
+output variables, ...
+...which is biased towards a certain type of function that does
+not match the true underlying function ($f$). As a result, the model is unable
+to provied a good approximation ($\hat f$) of $f$. Consequently, the model
+doesn't fit the data well, and will be unable to make good predictions on new,
+unseen data.
+
+High variance means that the model is too complex and has learned the noise in
+the training data, which leads to overfitting. Overfitting occurs when the
+model performs very well on the training data, but its performance is poor on
+the new, unseen data.
+
+In the case of overfitting, the model has become too complex and is fitting the
+training data too closely, including the noise in the data. As a result, it has
+a high variance, and its predictions are too sensitive to small fluctuations in
+the input data. This makes it difficult for the model to generalize well to
+new, unseen data.
+
+*Consequences*: Good predictions in-sample *but* bad performance out-of-sample
+(aka. high generalization error).
 
 *Example**: K-nearest neighbor, Decision trees, gradient boosting machines are
 very adaptable to non-linear data structures. However, they tend to overfit the

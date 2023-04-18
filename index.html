@@ -621,17 +621,25 @@ pkgs &lt;- c(&quot;rsample&quot;, # Resampling procedures
 # h2o 
 h2o::h2o.no_progress() # Avoid the progress bars in the output
 h2o::h2o.init()</code></pre>
-<pre><code>##  Connection successful!
+<pre><code>## 
+## H2O is not running yet, starting it now...
+## 
+## Note:  In case of errors look at the following log files:
+##     /var/folders/z7/5nvnmcts1px91jyq6lyc7wl40000gn/T//Rtmpv8AKiI/fileec74e4c22d1/h2o_steven_started_from_r.out
+##     /var/folders/z7/5nvnmcts1px91jyq6lyc7wl40000gn/T//Rtmpv8AKiI/fileec76881ef7f/h2o_steven_started_from_r.err
+## 
+## 
+## Starting H2O JVM and connecting: ... Connection successful!
 ## 
 ## R is connected to the H2O cluster: 
-##     H2O cluster uptime:         6 days 22 hours 
+##     H2O cluster uptime:         2 seconds 453 milliseconds 
 ##     H2O cluster timezone:       Europe/Berlin 
 ##     H2O data parsing timezone:  UTC 
 ##     H2O cluster version:        3.40.0.1 
-##     H2O cluster version age:    2 months and 8 days 
-##     H2O cluster name:           H2O_started_from_R_steven_edc276 
+##     H2O cluster version age:    2 months and 10 days 
+##     H2O cluster name:           H2O_started_from_R_steven_wog070 
 ##     H2O cluster total nodes:    1 
-##     H2O cluster total memory:   3.69 GB 
+##     H2O cluster total memory:   4.00 GB 
 ##     H2O cluster total cores:    8 
 ##     H2O cluster allowed cores:  8 
 ##     H2O cluster healthy:        TRUE 
@@ -1146,7 +1154,7 @@ details).</p>
 ##         data$obs &lt;- factor(data$obs, levels = lev)
 ##     postResample(data[, &quot;pred&quot;], data[, &quot;obs&quot;])
 ## }
-## &lt;bytecode: 0x7fd2d653fde8&gt;
+## &lt;bytecode: 0x7f971efbdcf0&gt;
 ## &lt;environment: namespace:caret&gt;
 ## 
 ## $selectionFunction
@@ -1227,29 +1235,33 @@ interesting because time series is a nested data structure.</p>
 <p>We can decompose the prediction error into (1) an error due to “bias”
 and (2) an error due to “variance”. There is often a tradeoff between a
 model’s ability to minimize bias and variance.</p>
-<div id="bias-todo" class="section level4">
-<h4>Bias TODO</h4>
+<p><span class="math display">\[\text{Prediction error} = \text{Error
+due to bias} + \text{Error due to
+variance}\]</span></p>
+<div id="bias" class="section level4">
+<h4>Bias</h4>
 <p><strong>Bias (error) function</strong>: A function that measures the
 difference between the expected (or average) model prediction and the
 correct value which we are trying to predict.</p>
-<p><em>Note:</em> This provides a sense of how well a model can conform
+<p><em>Note</em>: This provides a sense of how well a model can conform
 to the underlying structure of the data. The higher the bias the less it
 adapts to the underlying structure - vice versa.</p>
-<p><strong>Bias and underfitting</strong>: High bias leads to
-underfitting</p>
-<p>Is this statement correct?</p>
-<p>, because the model is not flexible enough to capture the patterns,
-or regular features, in the data. Put another way, (with) the model (we)
-impose(s) a strong prior belief about the functional relationship
-between the input and output variables, which is biased towards a
-certain type of function that does not match the true underlying
-function (<span class="math inline">\(f\)</span>). As a result, the
-model is unable to provied a good approximation (<span class="math inline">\(\hat f\)</span>) of <span class="math inline">\(f\)</span>. Consequently, the model doesn’t fit
-the data well, and will be unable to make good predictions on new,
-unseen data.</p>
+<p><strong>Model complexity, Underfitting, and Bias</strong>: High bias
+(in predictions) is often a result of underfitting the data which.
+Underfitting, in turn, often comes from low degrees of freedom models
+(i.e. models with a low number of hyperparameters). These models are not
+flexible enough to capture the regular patterns in the data.</p>
+<p>Put another way, (with) the model (we) impose(s) a strong prior
+belief about the functional relationship between the input and output
+variables, which is biased towards a certain type of function that does
+not match the true underlying function (<span class="math inline">\(f\)</span>). As a result, the model is unable to
+provied a good approximation (<span class="math inline">\(\hat
+f\)</span>) of <span class="math inline">\(f\)</span>. As a result, the
+model doesn’t fit the data well, and will be unable to make good
+predictions on new, unseen data.</p>
 <p><em>Consequences</em>: Bad predictions in-sample <em>and</em>
 out-of-sample (aka. high generalization error).</p>
-<p><em>Example</em>: Linear models are high bias as they are less
+<p><em>Example</em>: Linear models have high bias as they are less
 flexible and rarely capture non-linear, non-monotonic relationships. In
 contrast, Gradient Boosting Machines are low bias model as they are
 flexible enough to capture non-linear, non-monotonic relationships.</p>
@@ -1260,33 +1272,26 @@ say. If a model has high bias, it will have consistency (<em>low
 variance</em>) in its resampling performance (e.g. on bootstrapped, or
 cross-validated data).</p>
 </div>
-<div id="variance-todo" class="section level4">
-<h4>Variance TODO</h4>
+<div id="variance" class="section level4">
+<h4>Variance</h4>
 <p><strong>Variance (error) function</strong>: A function that measures
 the variability of a model prediction for a given data point.</p>
-<p>A model with high variance is overly complex and is often able to fit
-the training data well but has poor generalization performance, as it
-may overfit to noise and outliers in the training data.</p>
-<p><strong>Variance and overfitting</strong>: High variance is the
-result of overfitting, Is this statement correct?</p>
-<p>because the model is not flexible enough to capture the patterns, or
-regular features, in the data. Put another way, (with) the model (we)
-impose(s) a almost no prior belief about the functional relationship
-between the input and output variables, … …which is biased towards a
-certain type of function that does not match the true underlying
-function (<span class="math inline">\(f\)</span>). As a result, the
-model is unable to provied a good approximation (<span class="math inline">\(\hat f\)</span>) of <span class="math inline">\(f\)</span>. Consequently, the model doesn’t fit
-the data well, and will be unable to make good predictions on new,
-unseen data.</p>
-<p>High variance means that the model is too complex and has learned the
-noise in the training data, which leads to overfitting. Overfitting
-occurs when the model performs very well on the training data, but its
-performance is poor on the new, unseen data.</p>
-<p>In the case of overfitting, the model has become too complex and is
-fitting the training data too closely, including the noise in the data.
-As a result, it has a high variance, and its predictions are too
-sensitive to small fluctuations in the input data. This makes it
-difficult for the model to generalize well to new, unseen data.</p>
+<p><strong>Model complexity, high variance and overfitting</strong>:
+High variance (in prediction) is the result of overfitting the data.
+This, in turn, often happens with high-degree of freedoms model (i.e.,
+models with a big number of hyperparamters. Those models are too
+flexible and fit the training data too closely, including the noise
+inherent the data (as a flawed representation of the true data
+generating process).</p>
+<p>Put another way, (with) the model (we) impose(s) almost no prior
+belief about the functional relationship between the input and output
+variables. Since we provide no guidance, it adapts to the only available
+source of information, the data. Since every sample is a flawed
+representation of the underlying process, the function definition will
+biased towards a certain type of function that does not match the true
+underlying function (<span class="math inline">\(f\)</span>). As a
+result, the model is unable to provied a good approximation (<span class="math inline">\(\hat f\)</span>) of <span class="math inline">\(f\)</span>. The model fits the data too well, and
+will be unable to make good predictions on new, unseen data.</p>
 <p><em>Consequences</em>: Good predictions in-sample <em>but</em> bad
 performance out-of-sample (aka. high generalization error).</p>
 <p>*Example**: K-nearest neighbor, Decision trees, gradient boosting

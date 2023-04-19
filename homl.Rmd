@@ -713,32 +713,33 @@ trying to predict.
 structure of the data. The higher the bias the less it adapts to the underlying
 structure - vice versa.
 
-**Model complexity, Underfitting, and Bias**: High bias (in predictions) is
-often a result of underfitting the data which. Underfitting, in turn, often
-comes from low degrees of freedom models (i.e. models with a low number of
-hyperparameters). These models are not flexible enough to capture the regular
-patterns in the data.
+**Model complexity, Underfitting, and Bias**: Underfitting can result from
+models with low degrees of freedom that are not flexible enough to capture the
+regular patterns in the data, leading to high bias in predictions.
 
 Put another way, (with) the model (we) impose(s) a strong prior belief about
-the functional relationship between the input and output variables, which is
-biased towards a certain type of function that does not match the true
-underlying function ($f$). As a result, the model is unable to provied a good
-approximation ($\hat f$) of $f$. As a result, the model doesn't fit the data
-well, and will be unable to make good predictions on new, unseen data.
+the functional relationship between the input and output variables. If this
+belief is false, the function approximation ($\hat f$) will be biased towards a
+certain type of function ($\tilde f$) that does not match the underlying
+function ($f$). The biased model (\hat f) won't fit the data well and make bad
+predictions on new, unseen data.
 
 *Consequences*: Bad predictions in-sample *and* out-of-sample (aka. high
 generalization error).
 
 *Example*: Linear models have high bias as they are less flexible and rarely
-capture non-linear, non-monotonic relationships. In contrast, Gradient Boosting
-Machines are low bias model as they are flexible enough to capture non-linear,
-non-monotonic relationships. 
+capture non-linear, non-monotonic relationships. 
 
-**Bias, Variance and Resampling**: Models with high bias have a tendency to
-underfit the data and thus are rarely affected by the noise introduced by
-resampling. They are insensitive to the data, so to say. If a model has high
-bias, it will have consistency (*low variance*) in its resampling performance
-(e.g. on bootstrapped, or cross-validated data).
+*Counterexample*: Gradient Boosting Machines are low bias model as they are
+flexible enough to capture non-linear, non-monotonic relationships. 
+
+TODO
+
+**Bias, Variance and Resampling**: Models with high bias are often low degrees
+of freedom models and thus tend to underfit the data; they simply ignore them. 
+Consequently, high-bias model are rarely affected by the noise introduced by
+resampling (e.g. on bootstrapped, or cross-validated data). They have
+consistency (*low variance*) in their resampling performance 
 
 #### Variance
 
@@ -756,30 +757,35 @@ Put another way, (with) the model (we) impose(s) almost no prior belief about
 the functional relationship between the input and output variables. Since we 
 provide no guidance, it adapts to the only available source of information, the
 data. Since every sample is a flawed representation of the underlying process,
-the function definition will biased towards a certain type of function that
-does not match the true underlying function ($f$). As a result, the model is
-unable to provied a good approximation ($\hat f$) of $f$. The model fits the
-data too well, and will be unable to make good predictions on new, unseen data.
+the function definition will be biased towards a certain type of function that
+won't match the true underlying function ($f$). That means, the model is unable
+to provied a good approximation ($\hat f$) of $f$. The model fits the data too
+well, and will be unable to make good predictions on new, unseen data.
 
 *Consequences*: Good predictions in-sample *but* bad performance out-of-sample
 (aka. high generalization error).
 
 *Example**: K-nearest neighbor, Decision trees, gradient boosting machines are
 very adaptable to non-linear data structures. However, they tend to overfit the
-training data. Although you may achieve very good performance on your training
-data, the model will not automatically generalize well to unseen data.
+training data. 
 
 High adaptibility (lots of hyperparameters), overfitting, high variance
 
 individual data points (left). Models fit to 25 bootstrapped replicates of the
 data are deterred by the noise and generate highly variable predictions
 
-**Bias, Variance and Resampling**: Since high variance models are more prone to
-overfitting, using resampling procedures (e.g. bootstrapping, k-fold CV) are
-critical to reduce this risk. Moreover, many algorithms that are capable of
-achieving high generalization performance have lots of hyperparameters that
-control the level of model complexity (i.e., the tradeoff between bias and
-variance).
+**Bias, Variance and Resampling**: Since high variance models are often high
+degrees of freedom model they are prone to overfitting. Resampling procedures
+(e.g. bootstrapping, k-fold CV) are critical to reduce this risk. 
+
+#### Navigating the bias-variance trade-off
+
+Many algorithms that are capable of achieving high generalization performance
+have lots of hyperparameters that *control* the level of model complexity (i.e.,
+the tradeoff between bias and variance).
+
+
+
 
 Note to self: Is this why a stack of GBMs performs better than a single GBM?
 Idea: if we combine a lot of high variance, low bias models, and then use a DNN

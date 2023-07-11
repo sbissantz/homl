@@ -17,44 +17,40 @@ please read the original text.
 
 ## Chapter 1: Introduction 
 
-**Machine learning**: Develop algorithms/models that use information, such as
-data or prior knowledge, to approximate or extract functional relationships
+**Machine learning**: A framework for developing algorithmic models that use
+information (e.g., data) to approximate or extract functional relationships
 between variables.
 
-**Learning**: …means adaption; i.e. the learner uses the data (or evidence) to
-(self) optimize the algorithmic steps (e.g., the  parameters, $\theta$, of a
-model) to make accurate prediction.
+**Learning**: The process by which the model integrates information (e.g.,
+data) to optimize the algorithmic steps (e.g., parameters, weights) and thereby
+improve performance on a given task (e.g., prediction for unseen data).
 
-*Example*: In supervised learning we adapt to a known (“labeled”) target. In
-unsupervised machine learning we need to adapt to an unknown (“unlabeled”)
-target.
+**Loss function**: An function that measures the discrepancy or error
+between a model output (e.g., parameters, predictions) and a target - for *a
+single* data instance.
 
-**Loss function**: …but ‘accuracy’ in terms of what? Our goal is encapsulated
-in a loss (or utility) function, that specifies the difference to a target.
+*Example* (prediction loss): $L_{\text{sq}}(\hat y, y) = (\hat y- y)^2$
 
-*Example*: The Kullback-Leibler Divergence minimizes the (info) distance
-between our model distribution $\mathbf{q}$ and the true frequency distribution
-of events $\mathbf{p}$
+**Cost function** (aka. empirical risk): A function that measures the
+discrepancy or error between a model output (e.g., parameters, predictions) and
+a target - across (all) data instances.
 
-**Optimization**: With the loss function we optimize (often: minimize, rarely:
-maximize) a (often: loss, rarely: utility) function using an optimization
-algorithm, like stochastic gradient descent (SGD) algorithm. The algorithm
-tells us at each iteration the difference to a prespecified optimum (often: the
-minimum, e.g. 0).
+Note: It is an aggregate of the Loss over the training, validation, or test
+data \mathcal{D}= \left\{ (\mathbf{x}_i, y_i) \right\}_{i=1}^{n}
 
-```{r, echo=FALSE}
-if (knitr:::is_latex_output()) {
-  knitr::asis_output('https://upload.wikimedia.org/wikipedia/commons/a/a3/Gradient_descent.gif')
-} else {
-  knitr::include_graphics("./homl_files/sgd.gif")
-}
-```
-Figure: An intuitive visualization of the stochastic gradient descent method.
-The picture is taken from:
-https://commons.wikimedia.org/wiki/File:Gradient_descent.gif  
+**Example** (Cost as the mean loss): $C_(f, \mathcal D) =
+\frac{1}{n} \sum_{i=1}^n L(\hat{y}_i, y_i)$
 
-*Side note*: If AIML someday manages to learn causal relationships among
-variables (DAGs), it might be a data-driven replacement for theory development.
+**Training set**: A disjoint subset of the data set used to train the model,
+which means to learn the model parameters
+
+**Validation set**: An optional disjoint subset of the data used for model selection or to fine-tune the hyperparameters of the model (e.g. n° hidden layers in a DNN, learning rate) Note: Intermediary between training and testing sets. 
+
+**Test set**: A disjoint subset of the data used to assess the performance of a trained machine learning model by evaluating its predictions on unseen data.
+assesses model accuracy and generalization.
+
+In some cases, cross-validation techniques can also be used to further split
+the data and obtain better estimates of the model's performance.
 
 ### "Mere" predictions” vs. "causal predictions"
 
@@ -77,7 +73,7 @@ requires a deeper understanding of the underlying causal mechanisms and
 potential confounding factors that can impact the outcome. 
 
 *Example*: Causal inference techniques such as randomized controlled trials,
-propensity score matching, instrumental variable analysis and, often forgoten,
+propensity score matching, instrumental variable analysis and, often forgotten,
 *do-calculus* given observational data, are commonly used to estimate causal
 effects in various domains such as healthcare, social sciences, and economics.
 
@@ -91,7 +87,7 @@ training. However, do not forget reinforcement learning:
 3. Reinforcement Learning
 
 **Supervision**: …means, to provide the algorithm with predefined “labeled” training
-data. No supervision implies, the algorithm needs to do the assignment of the
+data. "No supervision" implies, the algorithm needs to do the assignment of the
 labels itself.
 
 **Labelling**: …refers to the process of assigning a specific category or value
@@ -118,6 +114,10 @@ valid. If $y$ is trash then we get “a good approximation – but of trash”.
 *Garbage in garbage out* it is that simple.
 
 ### Supervised learning (~predictive models)
+
+**Supervised machine learning**: A function approximation approach that aims to
+emulate a (unknown) mapping function from input data to labeled output values,
+with the goal of accurately predicting the labels for new, unseen data.
 
 **Supervised learning**: Develop an algorithm or predictive model that uses
 labeled data $D:\{X,y\}_{i=1}^n$ to produces an accurate (e.g., non- or
@@ -195,6 +195,10 @@ In essence, unsupervised learning is concerned with identifying groups in a
 data set. The groups may be defined by the rows (i.e., clustering) or the
 columns (i.e., dimension reduction); however, the motive in each case is quite
 different.
+
+**How is unsupervised learning related to function approximation?**
+Think of unsupervised learning as an emulator for a (unknown) function that
+maps input data to some meaningful representation without any labeled output.
 
 **Underlying function assumption**: Given a dataset: $D:\{Z_i\}$, we assume
 that there is an unknown functional relationship between the variables (rows,
@@ -367,8 +371,8 @@ Small gains with additional data as compared to smaller sample sizes.
 
 #### Simple random sampling splitting
 
- **Simple random sampling splitting**: Take a simple random sample from the
- data -- with the desired probability
+**Simple random sampling splitting**: Take a simple random sample from the 
+data -- with the desired probability
 
 **Simple random sampling**: A sampling method where each member of the
 population has an equal and independent chance of being selected for the
@@ -494,10 +498,13 @@ performance (Kuhn and Johnson 2013).
 2. Down-sampling
 3. Over-Under-Sampling
 
-#### Down sampling
+#### Down-sampling
 
-**Down sampling**: Balance the dataset by reducing the size of the abundant
-class(es) to match the frequencies in the least prevalent class.
+**Down sampling**: A technique used to address class imbalance by decreasing the number of instances in the majority class 
+
+*Example*: Reducing the number of instances in the majority class to
+achieve a balanced dataset by randomly selecting and removing a subset of
+instances.
 
 *Important*: By keeping all samples in the rare class and randomly selecting
 an equal number of samples in the abundant class, a balanced new dataset can be
@@ -515,8 +522,9 @@ with the option `down`.
 
 #### Up-sampling
 
-**Up-sampling**: A strategy where we try to balance the dataset by increasing
-the size of rarer samples. 
+**Up-sampling**: A technique used to address class imbalance by increasing the number of instances in the minority class 
+
+*Example*:  Creating additional instances for the minority class by duplicating or synthesizing existing instances to address class imbalance
 
 *Important*: Rather than getting rid of abundant samples, new rare samples are
 generated by using repetition or bootstrapping.
@@ -539,9 +547,8 @@ Chawla et al. 2002).
 **SMOTE**: ...generates synthetic samples of the minority class by
 interpolating new instances between existing minority class instances. The
 synthetic samples are created by randomly selecting a minority class instance,
-selecting one or more of its k-nearest neighbors, and then creating a new
-sample at a randomly selected point along the line segment joining the two
-instances.
+selecting one or more of its k-nearest neighbors, and then creating a new sample
+at a randomly selected point along the line segment joining the two instances.
 
 **ROSE**: ...involves generating new synthetic examples for the minority class
 by interpolating between existing examples, using a smoothed bootstrap approach
@@ -572,13 +579,20 @@ help(package = "ROSE")
 1. K-fold cross validation
 2. Bootstrapping
 
-*Note*: For other measures see the Anki card
-
 #### K-fold cross validation
 
-**K-fold cross validation**: A resampling method that provides us with an
+The purpose of cross-validation is to obtain a more robust estimate of the
+model's performance by evaluating it on multiple validation sets. It helps to
+assess how well the model generalizes to unseen data and provides insights into
+its overall effectiveness.
+
+**K-fold cross validation**: A (re-)sampling method that provides us with an
 approximation of the generalization error, i.e. the error that we might expect
 on unseen data.
+
+A resampling method in which we divide the data set in k (equal) folds, train the model on k-1 of them and test it on the hold-out validation set in total k-times averaging the result to get an estimate of its generalizaition performance.
+
+A sampling method includes sampling once from a data set and resampling to repeatedly sampling from the original data
 
 *Procedure*: Randomly divide the training data into k groups (aka., folds) of
 approximately equal size. Fit the model on k-1 folds and then compute the model
@@ -671,11 +685,16 @@ this can also increase the bias of your error estimate. This can be problematic
 with smaller data sets; however, for most average-to-large data sets (say
 $n \geq 1,000$) this concern is often negligible.
 
+*Note*: The names "632 method" and "632+ method" are derived from the specific 
+weighting scheme used in these techniques.
+
 *Important*: For small datasets Efron (1983) developed the “632 method” and
 Efron and Tibshirani (1997) discuss the “632+ method”; both approaches seek to
 minimize biases experienced with bootstrapping on smaller data sets and are
 available via `caret` (see the `boot632` argument in `caret::trainControl` for
 details).
+
+**632 Method**: A version of bootstrap validation where we address bias in smaller datasets by randomly assigning 63.2% (632) of the data for training and 36.8% for testing comparing the model's performance of the original data (in-sample) with its average performance of bootstrapped samples (OOS) 
 
 ```{r}
 caret::trainControl(
@@ -684,6 +703,8 @@ caret::trainControl(
   repeats = 5
 )
 ```
+
+**632+ Method**: An improved (version of the 632) bootstrap validation technique where we compare the reweighted model performance (x0.632) on the original data (in-sample) with its reweighted performance (x0.362) on the bootstrap samples (OOS).
 
 ##### Bootstrapping with time series
 
@@ -714,8 +735,9 @@ structure of the data. The higher the bias the less it adapts to the underlying
 structure - vice versa.
 
 **Model complexity, Underfitting, and Bias**: Underfitting can result from
-models with low degrees of freedom that are not flexible enough to capture the
-regular patterns in the data, leading to high bias in predictions.
+models with low degrees of freedom (i.e., few hyperparameters) that are not
+flexible enough to capture the regular patterns in the data, leading to high
+bias in predictions.
 
 Put another way, (with) the model (we) impose(s) a strong prior belief about
 the functional relationship between the input and output variables. If this
@@ -733,34 +755,31 @@ capture non-linear, non-monotonic relationships.
 *Counterexample*: Gradient Boosting Machines are low bias model as they are
 flexible enough to capture non-linear, non-monotonic relationships. 
 
-TODO
-
-**Bias, Variance and Resampling**: Models with high bias are often low degrees
-of freedom models and thus tend to underfit the data; they simply ignore them. 
-Consequently, high-bias model are rarely affected by the noise introduced by
-resampling (e.g. on bootstrapped, or cross-validated data). They have
-consistency (*low variance*) in their resampling performance 
+**Bias, Variance and Resampling**: Models with high bias - are often low
+degrees of freedom models and thus - tend to underfit the data; they simply
+ignore them. Consequently, high-bias model are rarely affected by the noise
+introduced by resampling (e.g. on bootstrapped, or cross-validated data). They
+have consistency (*low variance*) in their resampling performance 
 
 #### Variance
 
 **Variance (error) function**: A function that measures the variability of a
 model prediction for a given data point. 
 
-**Model complexity, high variance and overfitting**: High variance (in
-prediction) is the result of overfitting the data. This, in turn, often happens
-with high-degree of freedoms model (i.e., models with a big number of
-hyperparamters. Those models are too flexible and fit the training data too
-closely, including the noise inherent the data (as a flawed representation of
-the true data generating process). 
+**Model complexity, Overfitting, and Variance**: Overfitting can result from
+models with high degrees of freedom (i.e., many hyperparameters) that are too
+flexible to capture only the regular patterns in the data. They also adapt to
+irregular features (e.g., noise and outliers) leading to high variance in
+predictions.
 
 Put another way, (with) the model (we) impose(s) almost no prior belief about
-the functional relationship between the input and output variables. Since we 
-provide no guidance, it adapts to the only available source of information, the
-data. Since every sample is a flawed representation of the underlying process,
-the function definition will be biased towards a certain type of function that
-won't match the true underlying function ($f$). That means, the model is unable
-to provied a good approximation ($\hat f$) of $f$. The model fits the data too
-well, and will be unable to make good predictions on new, unseen data.
+the functional relationship between the input and output variables. With no
+guidance, the model adapts to the only available source of information, the
+data. Since every sample is an incomplete representation of the underlying
+process, the function approximation will biased towards its artefacts thus will
+not the underlying function ($f$) well. So even though the model (\hat f) will
+fit the data (too) well it is doomed to make bad predictions on new, unseen
+data.
 
 *Consequences*: Good predictions in-sample *but* bad performance out-of-sample
 (aka. high generalization error).
@@ -768,11 +787,6 @@ well, and will be unable to make good predictions on new, unseen data.
 *Example**: K-nearest neighbor, Decision trees, gradient boosting machines are
 very adaptable to non-linear data structures. However, they tend to overfit the
 training data. 
-
-High adaptibility (lots of hyperparameters), overfitting, high variance
-
-individual data points (left). Models fit to 25 bootstrapped replicates of the
-data are deterred by the noise and generate highly variable predictions
 
 **Bias, Variance and Resampling**: Since high variance models are often high
 degrees of freedom model they are prone to overfitting. Resampling procedures
@@ -784,6 +798,322 @@ Many algorithms that are capable of achieving high generalization performance
 have lots of hyperparameters that *control* the level of model complexity (i.e.,
 the tradeoff between bias and variance).
 
+#### Hyperparameters
+
+Hyperparameters (aka. tuning parameters) are the gear wheels to control the
+complexity of machine learning algorithms. They can be used to balance bias and
+variance and thus to navigate the bias-variance trade-off.
+
+Note: Not all algorithms have hyperparameters (e.g., ordinary least squares8).
+
+The proper setting of these hyperparameters is often dependent on the data and
+problem at hand and cannot always be estimated by the training data alone.
+Consequently, we need a method of identifying the optimal setting. 
+
+Different approaches to performing grid searches:
+1. Full Cartesian Grid Search
+1. Random Grid Search 
+1. Bayesian Optimization
+1. Adaptive Resampling via Futility Analysis
+
+##### Full Cartesian Grid Search
+
+**Full cartesian grid search**: ...assesses every hyperparameter value manually
+defined. 
+
+*Problem*: As models get more complex and offer more hyperparameters, this
+approach can become computationally burdensome and requires you to define the
+optimal hyperparameter grid settings to explore. 
+
+**Random Grid Search** (Bergstra and Bengio 2012): ...explores randomly
+selected hyperparameter values from a range of possible values
+
+*Problem*: Bad luck. Random grid search is not guaranteed to find the optimal
+hyperparameter values.
+
+**Early stopping**: ...allows you to stop a grid search once reduction in the
+error stops marginally improving.
+
+**Adaptive resampling via futility analysis** (Kuhn 2014): ...adaptively
+resamples candidate hyperparameter values based on approximately optimal
+performance, and more.
+
+**Bayesian Optimization**: Bayesian optimization with a, let's say, Gaussian
+process (GP) is a method for hyperparameter tuning that uses a probabilistic
+model (a GP) to model the objective function (e.g., validation error) of a
+machine learning model as a function of its hyperparameters. The model is
+iteratively updated based on the evaluation of the objective function at
+selected points, and a Bayesian approach is used to decide which point to
+evaluate next based on a trade-off between *exploration* (trying new points to
+improve the model) and *exploitation* (focusing on promising regions of the
+hyperparameter space). This method is especially useful when the objective
+function is expensive to evaluate, as it can lead to a more efficient search of
+the hyperparameter space compared to grid search or random search.
+
+#### Model evaluation
+
+In the past, satistical models were mainly evaluated based on goodess-of-fit
+measures (i.e., in-sample fit) and residual assessment. However, this approach
+leads to misleading results (Breiman et al., 2001).
+
+Today we agree on the better approach is on assesses *predictive accuracy*
+(i.e., out-of-sample performance) via *loss functions*.
+
+**Loss functions**: A function that compares the predicted values from the
+model to the actual (target) value 
+
+READ: https://www.statlect.com/glossary/loss-function
+
+---
+
+ In statistics and machine learning, a loss function quantifies the losses generated by the errors that we commit when:
+
+   1. we estimate the parameters of a statistical model;
+
+   2. we use a predictive model, such as a linear regression, to predict a variable.
+
+The minimization of the expected loss, called statistical risk, is one of the guiding principles in statistical modelling. 
+
+#### Estimation loss
+
+**Estimation error**: If we use some data to produce an estimate $\hat \beta$
+of the unknown $beta$, we will end up with $d(\beta, \hat beta) > 0$. This
+difference between the estimate and the true value is called the estimation
+error.
+
+**Estimation loss function**: Our wish to minimize the estimation error, can be
+formulated using a loss function $L(\hat \beta, \beta)$; which measures the
+loss incurred when we estimate $\beta$ with $\hat \beta$.
+
+*Example*: When $\beta$ is a scalar, the quadratic loss is: $L(\beta, \hat
+\beta) = (\beta - \hat \beta)^2$.
+
+#### Prediction loss
+
+**Prediction error**: If we've estimated a, let's say regression, model, we can
+compare its predicitons $\hat y$ to the true values $y$, the $d(y, \hat y) > 0$,
+where $\hat y = X \hat \beta$. This difference between the prediction and the
+true value is called the prediction error.
+
+**Estimation loss function**: Our wish to minimize the prediction error, can be
+formulated using a loss function $L(\hat y, y)$; which measures the
+loss incurred when we predict $y$ with $\hat y$
+
+*Important*: Most of the functions that are used to quantify prediction losses
+are also used for estimation losses. 
+
+#### Risk and empirical risk
+
+**Risk**: The expected value of the loss is called risk.
+
+**Estimator**: A random variable whose realization is equal to the estimate
+
+**Risk of the estimator**: When $\widehat{\beta }$ is seen as an estimator,
+(i.e., A random variable whose realization is equal to the estimate) the
+expected value $\mathrm E[L(\hat \beta, \beta)]$, is the *risk of the
+estimator*.
+
+**Risk of the predictions**: The expected value $\mathrm E[L(\hat y, y)]$, is
+the risk of the predictions
+
+**Empirical risk** The risk of the predictions can be approximated by the
+empirical risk, its sample counterpart: $\frac{1}{N}\sum_{i=1}^NL(\hat y_i,
+y_i)$, where $N$ is the sample size.
+
+#### Prediction & estimation risk (TODO)
+
+The prediction risk depends on the estmation risk. It is thus at least as big
+as the estimation risk $L(\hat \beta, \beta) \leq L(\hat y, y)$. This can be
+seen given the quadratic loss, for instance:
+
+$$\mathbb E[L(\hat y_i, y_i)] = \mathbb E(L(X_i \hat \beta, y_i) = \mathbb
+E(L(X_i (\sqrt{L(\hat \beta, \beta)} + \beta), y_i)$$
+
+#### Empirical risk minimization
+
+In linear regression the vector of regression cofficients $\mathbf \beta$ is
+usually estimated by empirical risk minimization.
+
+The predictions $\hat y_i$ depend on $\hat beta$, and so does the empirical
+risk. We search for the vector $\hat \mathbf \beta$ that minimizes the empirical
+risk.
+
+ The Ordinary Least Squares (OLS) estimator of $\hat\beta$ is the empirical
+ risk minimizer when the quadratic loss (details below) is used as the loss
+ function. In fact, the OLS estimator solves the minimization problem:
+
+$$\hat \beta = \arg \min_{\beta \in \mathbb R^p} \sum_{i=1}^N L(\hat y_i - y_i)$$
+
+$$\hat \beta = \arg \min_{\beta \in \mathbb R^p} \sum_{i=1}^N (\hat y_i - y_i)^2$$
+
+$$\hat \beta = \arg \min_{\beta \in \mathbb R^p} \sum_{i=1}^N (y_i - X_i \beta)^2$$
+
+Under the conditions stated in the Gauss-Markov theorem, the OLS estimator is
+also the unbiased estimator that generates the lowest expected estimation
+losses, provided that the quadratic loss is used to quantify the latter. 
+
+---
+
+*Note*: The output of a loss function is often referred to as the *error* or
+*pseudo residual*. 
+
+*Example*: In OLS Regression the prediction error is: $y_i - \hat y_i$, where
+\hat y_i = X_i \beta$, and thus the loss function is: $L(y_i - \hat y_i)$ 
+
+Objective: minimize
+
+
+For example, in regression, one way to measure error is to take the difference
+between the actual and predicted value for a given observation (this is the
+usual definition of a residual in ordinary linear regression). 
+
+The overall validation error of the model is computed by aggregating the errors
+across the entire validation data set.
+
+There are many loss functions to choose from when assessing the performance of
+a predictive model, each providing a unique understanding of the predictive
+accuracy and differing between regression and classification models.
+
+Furthermore, the way a loss function is computed will tend to emphasize certain
+types of errors over others and can lead to drastic differences in how we
+interpret the “optimal model”. Its important to consider the problem context
+when identifying the preferred performance metric to use. And when comparing
+multiple models, we need to compare them across the same metric.
+
+2.6.1 Regression models
+
+MSE: Mean squared error is the average of the squared error
+(MSE=1n∑ni=1(yi−^yi)2)9. The squared component results in larger errors having larger penalties.
+This (along with RMSE) is the most common error metric to use. 
+
+Objective: minimize
+
+RMSE: Root mean squared error. This simply takes the square root of the MSE
+metric (RMSE=√1n∑ni=1(yi−^yi)2) so that your error is in the same units as your
+response variable. If your response variable units are dollars, the units of
+MSE are dollars-squared, but the RMSE will be in dollars. Objective: minimize
+
+Deviance: Short for mean residual deviance. In essence, it provides a degree to
+which a model explains the variation in a set of data when using maximum
+likelihood estimation. Essentially this compares a saturated model (i.e. fully
+featured model) to an unsaturated model (i.e. intercept only or average). If
+the response variable distribution is Gaussian, then it will be approximately
+equal to MSE. When not, it usually gives a more useful estimate of error.
+Deviance is often used with classification models.10 Objective: minimize
+
+MAE: Mean absolute error. Similar to MSE but rather than squaring, it just
+takes the mean absolute difference between the actual and predicted values
+(MAE=1n∑ni=1(|yi−^yi|)). This results in less emphasis on larger errors than
+MSE. Objective: minimize
+
+RMSLE: Root mean squared logarithmic error. Similar to RMSE but it performs a
+log() on the actual and predicted values prior to computing the difference
+(RMSLE=√1n∑ni=1(log(yi+1)−log(^yi+1))2). When your response variable has a wide
+range of values, large response values with large errors can dominate the
+MSE/RMSE metric. RMSLE minimizes this impact so that small response values with
+large errors can have just as meaningful of an impact as large response values
+with large errors. Objective: minimize
+
+R2: This is a popular metric that represents the proportion of the variance in
+the dependent variable that is predictable from the independent variable(s).
+Unfortunately, it has several limitations. For example, two models built from
+two different data sets could have the exact same RMSE but if one has less
+variability in the response variable then it would have a lower R2
+    than the other. You should not place too much emphasis on this metric. Objective: maximize
+
+Most models we assess in this book will report most, if not all, of these
+metrics. We will emphasize MSE and RMSE but it’s important to realize that
+certain situations warrant emphasis on some metrics more than others. 2.6.2
+Classification models
+
+Misclassification: This is the overall error. For example, say you are
+predicting 3 classes ( high, medium, low ) and each class has 25, 30, 35
+observations respectively (90 observations total). If you misclassify 3
+observations of class high, 6 of class medium, and 4 of class low, then you
+misclassified 13 out of 90 observations resulting in a 14% misclassification
+rate. Objective: minimize
+
+Mean per class error: This is the average error rate for each class. For the
+above example, this would be the mean of 325,630,435, which is 14.5%. If your
+classes are balanced this will be identical to misclassification. Objective:
+minimize
+
+MSE: Mean squared error. Computes the distance from 1.0 to the probability
+suggested. So, say we have three classes, A, B, and C, and your model predicts
+a probability of 0.91 for A, 0.07 for B, and 0.02 for C. If the correct answer
+was A the MSE=0.092=0.0081 , if it is B MSE=0.932=0.8649, if it is C
+MSE=0.982=0.9604. The squared component results in large differences in
+probabilities for the true class having larger penalties. Objective: minimize
+
+Cross-entropy (aka Log Loss or Deviance): Similar to MSE but it incorporates a
+log of the predicted probability multiplied by the true class. Consequently,
+this metric disproportionately punishes predictions where we predict a small
+probability for the true class, which is another way of saying having high
+confidence in the wrong answer is really bad. Objective: minimize
+
+ Gini index: Mainly used with tree-based methods and commonly referred to as a
+ measure of purity where a small value indicates that a node contains
+ predominantly observations from a single class. Objective: minimize
+
+When applying classification models, we often use a confusion matrix to
+evaluate certain performance measures. A confusion matrix is simply a matrix
+that compares actual categorical levels (or events) to the predicted
+categorical levels. When we predict the right level, we refer to this as a true
+positive. However, if we predict a level or event that did not happen this is
+called a false positive (i.e. we predicted a customer would redeem a coupon and
+they did not). Alternatively, when we do not predict a level or event and it
+does happen that this is called a false negative (i.e. a customer that we did
+not predict to redeem a coupon does).
+
+We can extract different levels of performance for binary classifiers. For example, given the classification (or confusion) matrix illustrated in Figure 2.13 we can assess the following:
+
+    Accuracy: Overall, how often is the classifier correct? Opposite of misclassification above. Example: TP+TNtotal=100+50165=0.91
+
+. Objective: maximize
+
+Precision: How accurately does the classifier predict events? This metric is concerned with maximizing the true positives to false positive ratio. In other words, for the number of predictions that we made, how many were correct? Example: TPTP+FP=100100+10=0.91
+
+. Objective: maximize
+
+Sensitivity (aka recall): How accurately does the classifier classify actual events? This metric is concerned with maximizing the true positives to false negatives ratio. In other words, for the events that occurred, how many did we predict? Example: TPTP+FN=100100+5=0.95
+
+. Objective: maximize
+
+Specificity: How accurately does the classifier classify actual non-events? Example: TNTN+FP=5050+10=0.83
+. Objective: maximize
+
+
+AUC: Area under the curve. A good binary classifier will have high precision
+and sensitivity. This means the classifier does well when it predicts an event
+will and will not occur, which minimizes false positives and false negatives.
+To capture this balance, we often use a ROC curve that plots the false positive
+rate along the x-axis and the true positive rate along the y-axis. A line that
+is diagonal from the lower left corner to the upper right corner represents a
+random guess. The higher the line is in the upper left-hand corner, the better.
+AUC computes the area under this curve. Objective: maximize
+
+
+### MISC
+
+*Stupid question*: Does Random Forest use optimization algorithms such as SGD?
+No, it an ensemble method that uses decision trees as base learners, and the
+splitting criterion used in decision trees is usually based on the Gini
+impurity or information gain. The process of constructing decision trees
+involves finding the best split point at each node, which can be seen as an
+optimization problem. However, once the decision trees are constructed, no
+specific optimization algorithm is used for combining them in the Random Forest
+algorithm. Instead, a deterministic algorithms (e.g. the mean) is used to
+average or combine the predictions of the individual decision trees.
+
+*Stupid question*: Does Gradient Boosting use optimization algorithms such as
+SGD? Yes it uses an optimization algorithm, but for optimization is does not
+use SGD. However, it is based on the concept of gradient descent. Instead of
+minimizing the loss function directly as in SGD, Gradient Boosting iteratively
+fits weak learners to the negative gradient of the loss function with respect
+to the current model predictions. This is a similar optimization approach to
+gradient descent, but it is not stochastic in nature. Therefore, Gradient
+Boosting is typically considered a gradient-based optimization algorithm,
+rather than a stochastic optimization algorithm.
 
 
 
@@ -792,18 +1122,6 @@ Idea: if we combine a lot of high variance, low bias models, and then use a DNN
 to regularize as meta-model, we should be good to go. DNNs can stronger
 regularize than LASSO, Ridge, etc. Way better would be a DNN optimized by a GP
 or a GP or a Stack of DNNs
-
-#### Hyperparameters
-
-Hyperparameters (aka tuning parameters) are the “knobs to twiddle”7 to control
-the complexity of machine learning algorithms and, therefore, the bias-variance
-trade-off. Not all algorithms have hyperparameters (e.g., ordinary least
-squares8); however, most have at least one or more.
-
-
-
-
-### MISC
 
 
 h2o algorithms have a weights_column and balance_classes
